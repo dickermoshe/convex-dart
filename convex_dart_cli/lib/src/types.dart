@@ -282,12 +282,6 @@ class _ApiNamespaceBuilder {
     }
     buffer.writeln();
 
-    // Re-export types for backwards compatibility
-    for (final binding in sortedBindings) {
-      buffer.writeln("export '${binding.importPath}';");
-    }
-    buffer.writeln();
-
     buffer.writeln(_buildClass(_root, const []));
     buffer.writeln('const api = ${_classNameForPath(const [])}();');
     return buffer.toString();
