@@ -19,6 +19,7 @@ A Flutter package for seamless integration with [Convex](https://convex.dev) bac
 - 🔒 **Type Safety**: Fully type-safe API calls with compile-time error checking
 - ⚡ **Real-time**: Built-in support for real-time subscriptions and live queries
 - 🔄 **Auto-generation**: Automatic Dart client generation from your Convex schema
+- 🗂️ **Namespaced API**: Structured `api.<module>.<function>()` access mirrors your Convex directory layout
 - 🌐 **Cross-platform**: Works on iOS, Android, Web, macOS, Windows, and Linux
 - 📦 **Zero Config**: Minimal setup required - just generate and use
 - 🎯 **Developer Experience**: IntelliSense, auto-completion, and error handling
@@ -128,8 +129,7 @@ void main() async {
 // lib/pages/tasks_page.dart
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:your_app/src/convex/functions/tasks/getTasks.dart';
-import 'package:your_app/src/convex/functions/tasks/createTask.dart';
+import 'package:your_app/src/convex/client.dart';
 
 class TasksPage extends StatefulWidget {
   @override
@@ -143,7 +143,7 @@ class _TasksPageState extends State<TasksPage> {
   Future<void> _createTask() async {
     if (_controller.text.isNotEmpty) {
       try {
-        await createTask((title: _controller.text));
+        await api.tasks.createTask((title: _controller.text));
         _controller.clear();
         // No need to reload - StreamBuilder will update automatically
       } catch (e) {
@@ -157,7 +157,7 @@ class _TasksPageState extends State<TasksPage> {
   // Mark a task as completed or not completed
   Future<void> _toggleTask(TasksId taskId) async {
     try {
-      await toggleTaskCompletion((id: taskId));
+      await api.tasks.toggleTaskCompletion((id: taskId));
       print('Toggle task: $taskId');
       // No need to reload - StreamBuilder will update automatically
     } catch (e) {
@@ -196,11 +196,11 @@ class _TasksPageState extends State<TasksPage> {
               ],
             ),
           ),
-          
+
           // Tasks list with StreamBuilder
           Expanded(
             child: StreamBuilder<GetTasksResponse>(
-              stream: getTasksStream(),
+              stream: api.tasks.getTasksStream(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Center(
@@ -216,17 +216,17 @@ class _TasksPageState extends State<TasksPage> {
                     ),
                   );
                 }
-                
+
                 if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
                 }
-                
+
                 final tasks = snapshot.data!.body;
-                
+
                 if (tasks.isEmpty) {
                   return Center(child: Text('No tasks yet'));
                 }
-                
+
                 return ListView.builder(
                   itemCount: tasks.length,
                   itemBuilder: (context, index) {

@@ -78,8 +78,8 @@ class FunctionsSpec with FunctionsSpecMappable {
 
     final httpFunctions = functions.whereType<HttpFunctionSpec>();
 
-    // Create the client.dart file
-    buildClient(context, httpFunctions);
+    // Create the client.dart file and API namespace helper
+    buildClient(context, httpFunctions, successFunctions);
     // Create the schema.dart file
     _buildSchema(context);
     // Create the literals.dart file
@@ -149,6 +149,7 @@ class ${tableName.pascalCase}Id  implements TableId {
   void buildClient(
     ClientBuildContext context,
     Iterable<HttpFunctionSpec> httpFunctions,
+    Iterable<FunctionSpec> functions,
   ) {
     final httpFunctionsBuffer = StringBuffer();
     for (final httpFunction in httpFunctions) {
@@ -173,6 +174,8 @@ import 'package:convex_dart/src/convex_dart_for_generated_code.dart'
     as internal;
 import 'package:http/http.dart' as \$http;
 import 'dart:convert' as \$convert;
+export 'api.dart';
+
 class ConvexClient {
   static Future<void> init() async {
     await internal.InternalConvexClient.init(
@@ -189,6 +192,11 @@ class ConvexClient {
 
 }
     """;
+
+    final apiNamespace = _buildApiNamespace(functions);
+    if (apiNamespace != null) {
+      context.outputs[path.join("api.dart")] = apiNamespace;
+    }
   }
 
   void _buildLiterals(ClientBuildContext context) {
@@ -207,6 +215,204 @@ import "package:convex_dart/src/convex_dart_for_generated_code.dart";
     }
     context.outputs[path.join("literals.dart")] = literalsBuffer.toString();
   }
+
+  String? _buildApiNamespace(Iterable<FunctionSpec> functions) {
+    if (functions.isEmpty) {
+      return null;
+    }
+    final builder = _ApiNamespaceBuilder(functions);
+    return builder.build();
+  }
+}
+
+class _ApiNamespaceBuilder {
+  _ApiNamespaceBuilder(Iterable<FunctionSpec> functions) {
+    for (final spec in functions) {
+      _register(spec);
+    }
+  }
+
+  final Map<String, int> _aliasCounts = {};
+  final List<_FunctionBinding> _bindings = [];
+  final _NamespaceNode _root = _NamespaceNode(null);
+
+  static final _ignoreHeader = [
+    '// ignore_for_file: type=lint, unused_import, unnecessary_question_mark, dead_code',
+    '// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member',
+    '// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter, invalid_use_of_internal_member',
+  ].join('\n');
+
+  void _register(FunctionSpec spec) {
+    final moduleSegments = spec.pathParts
+        .take(spec.pathParts.length - 1)
+        .map((segment) => segment.replaceAll('.dart', ''));
+    final pathSegments = List<String>.from(moduleSegments);
+    final alias = _buildAlias(pathSegments, spec.functionName);
+    final importPath = path.posix.joinAll(['functions', ...spec.pathParts]);
+    final binding = _FunctionBinding(
+      spec: spec,
+      alias: alias,
+      importPath: importPath,
+      modulePath: pathSegments,
+    );
+    _bindings.add(binding);
+    _attachToTree(binding);
+  }
+
+  void _attachToTree(_FunctionBinding binding) {
+    var current = _root;
+    for (final segment in binding.modulePath) {
+      current = current.children.putIfAbsent(
+        segment,
+        () => _NamespaceNode(segment),
+      );
+    }
+    current.functions.add(binding);
+  }
+
+  String build() {
+    final buffer = StringBuffer();
+    buffer.writeln(_ignoreHeader);
+
+    // Imports
+    final sortedBindings = _bindings.toList()
+      ..sort((a, b) => a.importPath.compareTo(b.importPath));
+    for (final binding in sortedBindings) {
+      buffer.writeln("import '${binding.importPath}' as ${binding.alias};");
+    }
+    buffer.writeln();
+
+    // Re-export types for backwards compatibility
+    for (final binding in sortedBindings) {
+      buffer.writeln("export '${binding.importPath}';");
+    }
+    buffer.writeln();
+
+    buffer.writeln(_buildClass(_root, const []));
+    buffer.writeln('const api = ${_classNameForPath(const [])}();');
+    return buffer.toString();
+  }
+
+  String _buildClass(_NamespaceNode node, List<String> pathSegments) {
+    final buffer = StringBuffer();
+    final className = _classNameForPath(pathSegments);
+    buffer.writeln('class $className {');
+    buffer.writeln('  const $className();');
+    final sortedChildren = node.children.entries.toList()
+      ..sort((a, b) => a.key.compareTo(b.key));
+    for (final entry in sortedChildren) {
+      final childPath = [...pathSegments, entry.key];
+      final propertyName = _propertyName(entry.key);
+      final childClassName = _classNameForPath(childPath);
+      buffer.writeln(
+        '  $childClassName get $propertyName => const $childClassName();',
+      );
+    }
+    if (sortedChildren.isNotEmpty && node.functions.isNotEmpty) {
+      buffer.writeln();
+    }
+    final sortedFunctions = node.functions
+      ..sort((a, b) => a.spec.functionName.compareTo(b.spec.functionName));
+    for (var i = 0; i < sortedFunctions.length; i++) {
+      final binding = sortedFunctions[i];
+      final spec = binding.spec;
+      final alias = binding.alias;
+      final returnType = '$alias.${spec.returnsTypeName}';
+      final hasArgs = spec.argsTypeName != null;
+      final argsType = hasArgs ? '$alias.${spec.argsTypeName}' : '';
+      final params = hasArgs ? '$argsType args' : '';
+      final invocationArgs = hasArgs ? 'args' : '';
+      buffer.writeln(
+        '  Future<$returnType> ${spec.functionName}($params) => $alias.${spec.functionName}($invocationArgs);',
+      );
+      if (spec.functionType == 'Query') {
+        buffer.writeln(
+          '  Stream<$returnType> ${spec.functionName}Stream($params) => $alias.${spec.functionName}Stream($invocationArgs);',
+        );
+      }
+      if (i < sortedFunctions.length - 1) {
+        buffer.writeln();
+      }
+    }
+    buffer.writeln('}');
+    buffer.writeln();
+    for (final entry in sortedChildren) {
+      final childPath = [...pathSegments, entry.key];
+      buffer.write(_buildClass(entry.value, childPath));
+    }
+    return buffer.toString();
+  }
+
+  String _buildAlias(List<String> segments, String functionName) {
+    final parts = <String>['fn', ...segments, functionName];
+    final sanitized = parts
+        .map((segment) => _sanitizeIdentifier(ReCase(segment).snakeCase))
+        .join('_');
+    final count = _aliasCounts.update(
+      sanitized,
+      (value) => value + 1,
+      ifAbsent: () => 0,
+    );
+    if (count == 0) {
+      return sanitized;
+    }
+    return '${sanitized}_$count';
+  }
+
+  static String _classNameForPath(List<String> pathSegments) {
+    if (pathSegments.isEmpty) {
+      return 'ConvexApi';
+    }
+    final buffer = StringBuffer('ConvexApi');
+    for (final segment in pathSegments) {
+      buffer.write(_pascal(segment));
+    }
+    return buffer.toString();
+  }
+
+  static String _propertyName(String segment) {
+    return _camel(segment);
+  }
+
+  static String _sanitizeIdentifier(String value) {
+    var sanitized = stringToDart(value);
+    if (RegExp(r'^[0-9]').hasMatch(sanitized)) {
+      sanitized = '_$sanitized';
+    }
+    return sanitized;
+  }
+
+  static String _pascal(String value) {
+    final recase = ReCase(value).pascalCase;
+    return _sanitizeIdentifier(recase);
+  }
+
+  static String _camel(String value) {
+    final recase = ReCase(value).camelCase;
+    return _sanitizeIdentifier(recase);
+  }
+}
+
+class _NamespaceNode {
+  _NamespaceNode(this.segment);
+
+  final String? segment;
+  final Map<String, _NamespaceNode> children = {};
+  final List<_FunctionBinding> functions = [];
+}
+
+class _FunctionBinding {
+  _FunctionBinding({
+    required this.spec,
+    required this.alias,
+    required this.importPath,
+    required this.modulePath,
+  });
+
+  final FunctionSpec spec;
+  final String alias;
+  final String importPath;
+  final List<String> modulePath;
 }
 
 @MappableEnum(mode: ValuesMode.named)

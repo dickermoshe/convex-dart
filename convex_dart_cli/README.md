@@ -42,6 +42,7 @@ dart run convex_dart_cli generate --prod
 - **🔄 Auto-regeneration**: Monitors your Convex functions and regenerates Dart code automatically
 - **⚡ Fast builds**: Incremental generation only rebuilds changed functions
 - **🛠️ Development integration**: Runs `convex dev` in the background
+- **🗂️ Structured API**: Generates hierarchical `api.<module>.<function>()` namespaces that mirror your Convex folder layout
 - **📝 Helpful errors**: Provides detailed error messages and troubleshooting tips
 - **🎯 Type validation**: Ensures all Convex types are supported before generation
 
