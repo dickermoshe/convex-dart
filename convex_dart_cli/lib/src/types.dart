@@ -21,6 +21,8 @@ class ClientBuildContext {
   // ignore: library_private_types_in_public_api
   final Set<_LiteralsUnion> enums = {};
   final Set<String> tables = {};
+  // moduleKey (e.g., "tasks" or "users/admin") -> functions in that module
+  final Map<String, List<ApiFnMeta>> apiIndex = {};
   ClientBuildContext();
 }
 
@@ -84,6 +86,8 @@ class FunctionsSpec with FunctionsSpecMappable {
     _buildSchema(context);
     // Create the literals.dart file
     _buildLiterals(context);
+    // Create the api.dart file
+    _buildApi(context);
     // Format the code
     int formattedCount = 0;
     int formatFailedCount = 0;
@@ -173,6 +177,8 @@ import 'package:convex_dart/src/convex_dart_for_generated_code.dart'
     as internal;
 import 'package:http/http.dart' as \$http;
 import 'dart:convert' as \$convert;
+export 'api.dart';
+
 class ConvexClient {
   static Future<void> init() async {
     await internal.InternalConvexClient.init(
@@ -207,6 +213,130 @@ import "package:convex_dart/src/convex_dart_for_generated_code.dart";
     }
     context.outputs[path.join("literals.dart")] = literalsBuffer.toString();
   }
+
+  void _buildApi(ClientBuildContext context) {
+    if (context.apiIndex.isEmpty) {
+      return;
+    }
+    final buffer = StringBuffer();
+    buffer.writeln("""
+// ignore_for_file: type=lint, unused_import, unnecessary_question_mark, dead_code
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
+// ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter, invalid_use_of_internal_member
+""");
+    // Stable import aliasing
+    final uniqueImports =
+        context.apiIndex.values
+            .expand((metas) => metas)
+            .map((m) => m.importPath)
+            .toSet()
+            .toList()
+          ..sort();
+    final importAlias = <String, String>{};
+    for (var i = 0; i < uniqueImports.length; i++) {
+      importAlias[uniqueImports[i]] = "_m${i + 1}";
+    }
+    for (final imp in uniqueImports) {
+      final alias = importAlias[imp]!;
+      buffer.writeln("import '$imp' as $alias;");
+    }
+    buffer.writeln();
+
+    // Build namespace tree
+    final root = _ApiNode();
+    for (final entry in context.apiIndex.entries) {
+      final segments = entry.key.isEmpty ? <String>[] : entry.key.split("/");
+      var current = root;
+      for (final seg in segments) {
+        current = current.children.putIfAbsent(seg, () => _ApiNode());
+      }
+      current.functions.addAll(entry.value);
+    }
+
+    // Emit classes
+    void writeClass(_ApiNode node, List<String> pathSegments) {
+      final className = _className(pathSegments);
+
+      buffer.writeln("class $className {");
+      buffer.writeln("  const $className();");
+
+      final children = node.children.keys.toList()..sort();
+      for (final seg in children) {
+        final childClass = _className([...pathSegments, seg]);
+        final propName = ReCase(seg).camelCase;
+        buffer.writeln("  $childClass get $propName => const $childClass();");
+      }
+
+      if (children.isNotEmpty && node.functions.isNotEmpty) {
+        buffer.writeln();
+      }
+
+      node.functions.sort((a, b) => a.functionName.compareTo(b.functionName));
+      for (var i = 0; i < node.functions.length; i++) {
+        final f = node.functions[i];
+        final alias = importAlias[f.importPath]!;
+        final returnsType = "$alias.${f.returnsTypeName}";
+        final params = f.argsTypeName != null
+            ? "$alias.${f.argsTypeName!} args"
+            : "";
+        final callArgs = f.argsTypeName != null ? "args" : "";
+
+        buffer.writeln(
+          "  Future<$returnsType> ${f.functionName}($params) => $alias.${f.functionName}($callArgs);",
+        );
+
+        if (f.functionType == "Query") {
+          buffer.writeln(
+            "  Stream<$returnsType> ${f.functionName}Stream($params) => $alias.${f.functionName}Stream($callArgs);",
+          );
+        }
+
+        if (i < node.functions.length - 1) {
+          buffer.writeln();
+        }
+      }
+
+      buffer.writeln("}");
+      buffer.writeln();
+
+      for (final seg in children) {
+        writeClass(node.children[seg]!, [...pathSegments, seg]);
+      }
+    }
+
+    writeClass(root, const []);
+    buffer.writeln("const api = ${_className(const [])}();");
+    context.outputs[path.join("api.dart")] = buffer.toString();
+  }
+
+  String _className(List<String> pathSegments) {
+    var name = "ConvexApi";
+    for (final segment in pathSegments) {
+      name += ReCase(segment).pascalCase;
+    }
+    return stringToDart(name);
+  }
+}
+
+class _ApiNode {
+  final Map<String, _ApiNode> children = {};
+  final List<ApiFnMeta> functions = [];
+}
+
+class ApiFnMeta {
+  final String importPath; // e.g., functions/tasks/createTask.dart
+  final String functionName; // e.g., createTask
+  final String functionType; // Query | Mutation | Action
+  final String? argsTypeName; // nullable for JsAny
+  final String returnsTypeName;
+
+  ApiFnMeta({
+    required this.importPath,
+    required this.functionName,
+    required this.functionType,
+    required this.argsTypeName,
+    required this.returnsTypeName,
+  });
 }
 
 @MappableEnum(mode: ValuesMode.named)
@@ -485,6 +615,19 @@ $returnsTypeName $deserializeMethodName(Value map) {
   return $deserializeCode;
 }
 """);
+    // Register this function for API namespace generation
+    final importPath = path.posix.joinAll(["functions", ...pathParts]);
+
+    final meta = ApiFnMeta(
+      importPath: importPath,
+      functionName: functionName,
+      functionType: functionType,
+      argsTypeName: argsTypeName,
+      returnsTypeName: returnsTypeName,
+    );
+
+    final moduleKey = pathParts.take(pathParts.length - 1).join("/");
+    context.clientContext.apiIndex.putIfAbsent(moduleKey, () => []).add(meta);
   }
 }
 
