@@ -177,7 +177,7 @@ import 'package:convex_dart/src/convex_dart_for_generated_code.dart'
     as internal;
 import 'package:http/http.dart' as \$http;
 import 'dart:convert' as \$convert;
-export 'api.dart';
+${context.apiIndex.isEmpty ? '' : "export 'api.dart';"}
 
 class ConvexClient {
   static Future<void> init() async {
@@ -218,6 +218,7 @@ import "package:convex_dart/src/convex_dart_for_generated_code.dart";
     if (context.apiIndex.isEmpty) {
       return;
     }
+
     final buffer = StringBuffer();
     buffer.writeln("""
 // ignore_for_file: type=lint, unused_import, unnecessary_question_mark, dead_code
