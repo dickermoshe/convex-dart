@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-<module fileurl="file://$PROJECT_DIR$/example/melos_api.iml" filepath="$PROJECT_DIR$/example/melos_api.iml" />
-<module fileurl="file://$PROJECT_DIR$/convex_dart/melos_convex_dart.iml" filepath="$PROJECT_DIR$/convex_dart/melos_convex_dart.iml" />
-<module fileurl="file://$PROJECT_DIR$/convex_dart_cli/melos_convex_dart_cli.iml" filepath="$PROJECT_DIR$/convex_dart_cli/melos_convex_dart_cli.iml" />
-<module fileurl="file://$PROJECT_DIR$/melos_convex_dart_workspace.iml" filepath="$PROJECT_DIR$/melos_convex_dart_workspace.iml" />
+<module fileurl="file://$PROJECT_DIR$/example/melos_api.iml" filepath="$PROJECT_DIR$/example/melos_api.iml"/>
+<module fileurl="file://$PROJECT_DIR$/convex_dart/melos_convex_dart.iml" filepath="$PROJECT_DIR$/convex_dart/melos_convex_dart.iml"/>
+<module fileurl="file://$PROJECT_DIR$/convex_dart_cli/melos_convex_dart_cli.iml" filepath="$PROJECT_DIR$/convex_dart_cli/melos_convex_dart_cli.iml"/>
+<module fileurl="file://$PROJECT_DIR$/melos_convex_dart_workspace.iml" filepath="$PROJECT_DIR$/melos_convex_dart_workspace.iml"/>
     </modules>
   </component>
 </project>
