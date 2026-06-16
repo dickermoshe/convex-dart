@@ -4,6 +4,7 @@
 import 'package:convex_dart/src/convex_dart_for_generated_code.dart'
     as internal;
 import 'package:http/http.dart' as $http;
+import 'dart:async';
 import 'dart:convert' as $convert;
 import './functions/generic_functions/query1.dart'
     as query10

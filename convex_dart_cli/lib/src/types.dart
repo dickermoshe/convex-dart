@@ -236,6 +236,7 @@ class ${tableName.pascalCase}Id  implements TableId {
 import 'package:convex_dart/src/convex_dart_for_generated_code.dart'
     as internal;
 import 'package:http/http.dart' as \$http;
+import 'dart:async';
 import 'dart:convert' as \$convert;
 ${builtFunctionSpecs.map((spec) => "import '${spec.importPath}' as ${spec.prefix} show ${spec.functionNames.join(",")};").join("\n")}
 class ConvexClient {
