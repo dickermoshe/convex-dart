@@ -47,6 +47,9 @@ jobs:
       - name: Set up Rust
         run: rustup toolchain install stable --profile minimal
 
+      - name: Install Linux dependencies
+        run: sudo apt-get update && sudo apt-get install -y libgtk-3-dev ninja-build
+
       - name: Install JavaScript dependencies
         run: npm ci
         working-directory: example
