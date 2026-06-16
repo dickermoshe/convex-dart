@@ -234,13 +234,41 @@ class InternalConvexClient {
     return _handleConvexCallback(() => _client.action(name: name, args: args));
   }
 
-  /// Sets the authentication token for the client.
+  /// Set auth for use when calling Convex functions.
   ///
-  /// [token] - The authentication token to set, or null to clear.
+  /// Set it with a token that you get from your auth provider via their login
+  /// flow. If `None` is passed as the token, then auth is unset (logging
+  /// out).
   ///
-  /// Used to authenticate requests to the Convex backend.
+  /// Internally this wraps the static token in a trivial callback and the
+  /// same token is re-sent on websocket reconnect.
+  ///
+  /// Prefer [setAuthCallback] - it will allow fetching a
+  /// fresh token after a websocket reconnect. That's important because
+  /// the original token might have expired while the socket was
+  /// disconnected.
   Future<void> setAuth({required String? token}) async {
     return await _client.setAuth(token: token);
+  }
+
+  /// Set an auth token fetcher callback for use when calling Convex
+  /// functions.
+  ///
+  /// The callback is invoked immediately (with `force_refresh=false`) and
+  /// again on every websocket reconnect (with `force_refresh=true`),
+  /// allowing dynamic token refresh.
+  ///
+  /// Pass [null] to clear the callback and log out.
+  Future<void> setAuthCallback({
+    FutureOr<AuthenticationToken> Function(bool)? fetcher,
+  }) async {
+    if (fetcher == null) {
+      return await _client.setAuthCallback(fetcher: null);
+    } else {
+      return await _client.setAuthCallback(
+        fetcher: DartAuthTokenFetcher(fetcher: fetcher),
+      );
+    }
   }
 }
 

@@ -26,8 +26,8 @@ BTreeMapStringValue hashmapToBtreemap({required Map<String, Value> hashmap}) =>
 Map<String, Value> btreemapToHashmap({required BTreeMapStringValue btreemap}) =>
     RustLib.instance.api.crateDartBtreemapToHashmap(btreemap: btreemap);
 
-// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AuthenticationToken>>
-abstract class AuthenticationToken implements RustOpaqueInterface {}
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<BTreeMap < String , String >>>
+abstract class BTreeMapStringString implements RustOpaqueInterface {}
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<DartAuthTokenFetcher>>
 abstract class DartAuthTokenFetcher implements RustOpaqueInterface {
@@ -142,6 +142,24 @@ abstract class QuerySubscriber {
 }
 
 @freezed
+sealed class AuthenticationToken with _$AuthenticationToken {
+  const AuthenticationToken._();
+
+  /// Admin key issued by a KeyBroker, potentially acting as a user.
+  const factory AuthenticationToken.admin(
+    String field0, [
+    UserIdentityAttributes? field1,
+  ]) = AuthenticationToken_Admin;
+
+  /// OpenID Connect JWT
+  const factory AuthenticationToken.user(String field0) =
+      AuthenticationToken_User;
+
+  /// Logged out.
+  const factory AuthenticationToken.none() = AuthenticationToken_None;
+}
+
+@freezed
 sealed class ClientError with _$ClientError implements FrbException {
   const ClientError._();
 
@@ -162,4 +180,125 @@ sealed class ClientError with _$ClientError implements FrbException {
     /// A generic error message from the server.
     required String msg,
   }) = ClientError_ServerError;
+}
+
+class UserIdentifier {
+  final String field0;
+
+  const UserIdentifier({required this.field0});
+
+  @override
+  int get hashCode => field0.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserIdentifier &&
+          runtimeType == other.runtimeType &&
+          field0 == other.field0;
+}
+
+class UserIdentityAttributes {
+  final UserIdentifier tokenIdentifier;
+  final String? issuer;
+  final String? subject;
+  final String? name;
+  final String? givenName;
+  final String? familyName;
+  final String? nickname;
+  final String? preferredUsername;
+  final String? profileUrl;
+  final String? pictureUrl;
+  final String? websiteUrl;
+  final String? email;
+  final bool? emailVerified;
+  final String? gender;
+  final String? birthday;
+  final String? timezone;
+  final String? language;
+  final String? phoneNumber;
+  final bool? phoneNumberVerified;
+  final String? address;
+
+  /// Stored as RFC3339 string
+  final String? updatedAt;
+  final BTreeMapStringString customClaims;
+
+  const UserIdentityAttributes({
+    required this.tokenIdentifier,
+    this.issuer,
+    this.subject,
+    this.name,
+    this.givenName,
+    this.familyName,
+    this.nickname,
+    this.preferredUsername,
+    this.profileUrl,
+    this.pictureUrl,
+    this.websiteUrl,
+    this.email,
+    this.emailVerified,
+    this.gender,
+    this.birthday,
+    this.timezone,
+    this.language,
+    this.phoneNumber,
+    this.phoneNumberVerified,
+    this.address,
+    this.updatedAt,
+    required this.customClaims,
+  });
+
+  @override
+  int get hashCode =>
+      tokenIdentifier.hashCode ^
+      issuer.hashCode ^
+      subject.hashCode ^
+      name.hashCode ^
+      givenName.hashCode ^
+      familyName.hashCode ^
+      nickname.hashCode ^
+      preferredUsername.hashCode ^
+      profileUrl.hashCode ^
+      pictureUrl.hashCode ^
+      websiteUrl.hashCode ^
+      email.hashCode ^
+      emailVerified.hashCode ^
+      gender.hashCode ^
+      birthday.hashCode ^
+      timezone.hashCode ^
+      language.hashCode ^
+      phoneNumber.hashCode ^
+      phoneNumberVerified.hashCode ^
+      address.hashCode ^
+      updatedAt.hashCode ^
+      customClaims.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UserIdentityAttributes &&
+          runtimeType == other.runtimeType &&
+          tokenIdentifier == other.tokenIdentifier &&
+          issuer == other.issuer &&
+          subject == other.subject &&
+          name == other.name &&
+          givenName == other.givenName &&
+          familyName == other.familyName &&
+          nickname == other.nickname &&
+          preferredUsername == other.preferredUsername &&
+          profileUrl == other.profileUrl &&
+          pictureUrl == other.pictureUrl &&
+          websiteUrl == other.websiteUrl &&
+          email == other.email &&
+          emailVerified == other.emailVerified &&
+          gender == other.gender &&
+          birthday == other.birthday &&
+          timezone == other.timezone &&
+          language == other.language &&
+          phoneNumber == other.phoneNumber &&
+          phoneNumberVerified == other.phoneNumberVerified &&
+          address == other.address &&
+          updatedAt == other.updatedAt &&
+          customClaims == other.customClaims;
 }

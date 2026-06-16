@@ -74,13 +74,33 @@ fn wire__crate__dart__DartAuthTokenFetcher_new_impl(
     rust_vec_len_: i32,
     data_len_: i32,
 ) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "DartAuthTokenFetcher_new", port: None, mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync }, move || { 
-            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
-            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_fetcher = decode_DartFn_Inputs_bool_Output_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAuthenticationToken_AnyhowException(<flutter_rust_bridge::DartOpaque>::sse_decode(&mut deserializer));deserializer.end();
-                transform_result_sse::<_, ()>((move || {
-                     let output_ok = Result::<_,()>::Ok(crate::dart::DartAuthTokenFetcher::new(api_fetcher))?;   Ok(output_ok)
-                })()) })
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "DartAuthTokenFetcher_new",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_fetcher = decode_DartFn_Inputs_bool_Output_authentication_token_AnyhowException(
+                <flutter_rust_bridge::DartOpaque>::sse_decode(&mut deserializer),
+            );
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let output_ok =
+                    Result::<_, ()>::Ok(crate::dart::DartAuthTokenFetcher::new(api_fetcher))?;
+                Ok(output_ok)
+            })())
+        },
+    )
 }
 fn wire__crate__dart__DartQuerySubscriber_new_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -797,22 +817,72 @@ fn wire__crate__dart__logging__init_logging_impl(
     )
 }
 
+// Section: static_checks
+
+#[allow(clippy::unnecessary_literal_unwrap)]
+const _: fn() = || {
+    match None::<crate::dart::AuthenticationToken>.unwrap() {
+        crate::dart::AuthenticationToken::Admin(field0, field1) => {
+            let _: String = field0;
+            let _: Option<crate::dart::UserIdentityAttributes> = field1;
+        },
+        crate::dart::AuthenticationToken::User(field0) => {
+            let _: String = field0;
+        },
+        crate::dart::AuthenticationToken::None => {},
+    }
+    {
+        let UserIdentifier_ = None::<crate::dart::UserIdentifier>.unwrap();
+        let _: String = UserIdentifier_.0;
+    }
+    {
+        let UserIdentityAttributes = None::<crate::dart::UserIdentityAttributes>.unwrap();
+        let _: crate::dart::UserIdentifier = UserIdentityAttributes.token_identifier;
+        let _: Option<String> = UserIdentityAttributes.issuer;
+        let _: Option<String> = UserIdentityAttributes.subject;
+        let _: Option<String> = UserIdentityAttributes.name;
+        let _: Option<String> = UserIdentityAttributes.given_name;
+        let _: Option<String> = UserIdentityAttributes.family_name;
+        let _: Option<String> = UserIdentityAttributes.nickname;
+        let _: Option<String> = UserIdentityAttributes.preferred_username;
+        let _: Option<String> = UserIdentityAttributes.profile_url;
+        let _: Option<String> = UserIdentityAttributes.picture_url;
+        let _: Option<String> = UserIdentityAttributes.website_url;
+        let _: Option<String> = UserIdentityAttributes.email;
+        let _: Option<bool> = UserIdentityAttributes.email_verified;
+        let _: Option<String> = UserIdentityAttributes.gender;
+        let _: Option<String> = UserIdentityAttributes.birthday;
+        let _: Option<String> = UserIdentityAttributes.timezone;
+        let _: Option<String> = UserIdentityAttributes.language;
+        let _: Option<String> = UserIdentityAttributes.phone_number;
+        let _: Option<bool> = UserIdentityAttributes.phone_number_verified;
+        let _: Option<String> = UserIdentityAttributes.address;
+        let _: Option<String> = UserIdentityAttributes.updated_at;
+        let _: BTreeMap<String, String> = UserIdentityAttributes.custom_claims;
+    }
+};
+
 // Section: related_funcs
 
-fn decode_DartFn_Inputs_bool_Output_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAuthenticationToken_AnyhowException(
+fn decode_DartFn_Inputs_bool_Output_authentication_token_AnyhowException(
     dart_opaque: flutter_rust_bridge::DartOpaque,
 ) -> impl Fn(
     bool,
 ) -> flutter_rust_bridge::DartFnFuture<
-    std::result::Result<AuthenticationToken, flutter_rust_bridge::for_generated::anyhow::Error>,
+    std::result::Result<
+        crate::dart::AuthenticationToken,
+        flutter_rust_bridge::for_generated::anyhow::Error,
+    >,
 > {
     use flutter_rust_bridge::IntoDart;
 
     async fn body(
         dart_opaque: flutter_rust_bridge::DartOpaque,
         arg0: bool,
-    ) -> std::result::Result<AuthenticationToken, flutter_rust_bridge::for_generated::anyhow::Error>
-    {
+    ) -> std::result::Result<
+        crate::dart::AuthenticationToken,
+        flutter_rust_bridge::for_generated::anyhow::Error,
+    > {
         let args = vec![arg0.into_into_dart().into_dart()];
         let message = FLUTTER_RUST_BRIDGE_HANDLER
             .dart_fn_invoke(dart_opaque, args)
@@ -821,7 +891,9 @@ fn decode_DartFn_Inputs_bool_Output_Auto_Owned_RustOpaque_flutter_rust_bridgefor
         let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
         let action = deserializer.cursor.read_u8().unwrap();
         let ans = match action {
-            0 => std::result::Result::Ok(<AuthenticationToken>::sse_decode(&mut deserializer)),
+            0 => std::result::Result::Ok(<crate::dart::AuthenticationToken>::sse_decode(
+                &mut deserializer,
+            )),
             1 => std::result::Result::Err(
                 <flutter_rust_bridge::for_generated::anyhow::Error>::sse_decode(&mut deserializer),
             ),
@@ -915,7 +987,7 @@ fn decode_DartFn_Inputs_web_socket_state_Output_unit_AnyhowException(
     }
 }
 flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
-    flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AuthenticationToken>
+    flutter_rust_bridge::for_generated::RustAutoOpaqueInner<BTreeMap<String, String>>
 );
 flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
     flutter_rust_bridge::for_generated::RustAutoOpaqueInner<BTreeMap<String, Value>>
@@ -951,11 +1023,11 @@ impl SseDecode for flutter_rust_bridge::for_generated::anyhow::Error {
     }
 }
 
-impl SseDecode for AuthenticationToken {
+impl SseDecode for BTreeMap<String, String> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut inner = <RustOpaqueMoi<
-            flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AuthenticationToken>,
+            flutter_rust_bridge::for_generated::RustAutoOpaqueInner<BTreeMap<String, String>>,
         >>::sse_decode(deserializer);
         return flutter_rust_bridge::for_generated::rust_auto_opaque_decode_owned(inner);
     }
@@ -1050,7 +1122,9 @@ impl SseDecode for std::collections::HashMap<String, crate::value::Value> {
 }
 
 impl SseDecode
-    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AuthenticationToken>>
+    for RustOpaqueMoi<
+        flutter_rust_bridge::for_generated::RustAutoOpaqueInner<BTreeMap<String, String>>,
+    >
 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1142,6 +1216,31 @@ impl SseDecode for String {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut inner = <Vec<u8>>::sse_decode(deserializer);
         return String::from_utf8(inner).unwrap();
+    }
+}
+
+impl SseDecode for crate::dart::AuthenticationToken {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut tag_ = <i32>::sse_decode(deserializer);
+        match tag_ {
+            0 => {
+                let mut var_field0 = <String>::sse_decode(deserializer);
+                let mut var_field1 =
+                    <Option<crate::dart::UserIdentityAttributes>>::sse_decode(deserializer);
+                return crate::dart::AuthenticationToken::Admin(var_field0, var_field1);
+            },
+            1 => {
+                let mut var_field0 = <String>::sse_decode(deserializer);
+                return crate::dart::AuthenticationToken::User(var_field0);
+            },
+            2 => {
+                return crate::dart::AuthenticationToken::None;
+            },
+            _ => {
+                unimplemented!("");
+            },
+        }
     }
 }
 
@@ -1309,6 +1408,30 @@ impl SseDecode for Option<DartWebSocketStateSubscriber> {
     }
 }
 
+impl SseDecode for Option<bool> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<bool>::sse_decode(deserializer));
+        } else {
+            return None;
+        }
+    }
+}
+
+impl SseDecode for Option<crate::dart::UserIdentityAttributes> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<crate::dart::UserIdentityAttributes>::sse_decode(
+                deserializer,
+            ));
+        } else {
+            return None;
+        }
+    }
+}
+
 impl SseDecode for (String, crate::value::Value) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1328,6 +1451,66 @@ impl SseDecode for u8 {
 impl SseDecode for () {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {}
+}
+
+impl SseDecode for crate::dart::UserIdentifier {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_field0 = <String>::sse_decode(deserializer);
+        return crate::dart::UserIdentifier(var_field0);
+    }
+}
+
+impl SseDecode for crate::dart::UserIdentityAttributes {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_tokenIdentifier = <crate::dart::UserIdentifier>::sse_decode(deserializer);
+        let mut var_issuer = <Option<String>>::sse_decode(deserializer);
+        let mut var_subject = <Option<String>>::sse_decode(deserializer);
+        let mut var_name = <Option<String>>::sse_decode(deserializer);
+        let mut var_givenName = <Option<String>>::sse_decode(deserializer);
+        let mut var_familyName = <Option<String>>::sse_decode(deserializer);
+        let mut var_nickname = <Option<String>>::sse_decode(deserializer);
+        let mut var_preferredUsername = <Option<String>>::sse_decode(deserializer);
+        let mut var_profileUrl = <Option<String>>::sse_decode(deserializer);
+        let mut var_pictureUrl = <Option<String>>::sse_decode(deserializer);
+        let mut var_websiteUrl = <Option<String>>::sse_decode(deserializer);
+        let mut var_email = <Option<String>>::sse_decode(deserializer);
+        let mut var_emailVerified = <Option<bool>>::sse_decode(deserializer);
+        let mut var_gender = <Option<String>>::sse_decode(deserializer);
+        let mut var_birthday = <Option<String>>::sse_decode(deserializer);
+        let mut var_timezone = <Option<String>>::sse_decode(deserializer);
+        let mut var_language = <Option<String>>::sse_decode(deserializer);
+        let mut var_phoneNumber = <Option<String>>::sse_decode(deserializer);
+        let mut var_phoneNumberVerified = <Option<bool>>::sse_decode(deserializer);
+        let mut var_address = <Option<String>>::sse_decode(deserializer);
+        let mut var_updatedAt = <Option<String>>::sse_decode(deserializer);
+        let mut var_customClaims = <BTreeMap<String, String>>::sse_decode(deserializer);
+        return crate::dart::UserIdentityAttributes {
+            token_identifier: var_tokenIdentifier,
+            issuer: var_issuer,
+            subject: var_subject,
+            name: var_name,
+            given_name: var_givenName,
+            family_name: var_familyName,
+            nickname: var_nickname,
+            preferred_username: var_preferredUsername,
+            profile_url: var_profileUrl,
+            picture_url: var_pictureUrl,
+            website_url: var_websiteUrl,
+            email: var_email,
+            email_verified: var_emailVerified,
+            gender: var_gender,
+            birthday: var_birthday,
+            timezone: var_timezone,
+            language: var_language,
+            phone_number: var_phoneNumber,
+            phone_number_verified: var_phoneNumberVerified,
+            address: var_address,
+            updated_at: var_updatedAt,
+            custom_claims: var_customClaims,
+        };
+    }
 }
 
 impl SseDecode for usize {
@@ -1445,19 +1628,21 @@ fn pde_ffi_dispatcher_sync_impl(
 // Section: rust2dart
 
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for FrbWrapper<AuthenticationToken> {
+impl flutter_rust_bridge::IntoDart for FrbWrapper<BTreeMap<String, String>> {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self.0)
             .into_dart()
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for FrbWrapper<AuthenticationToken>
+    for FrbWrapper<BTreeMap<String, String>>
 {
 }
 
-impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<AuthenticationToken>> for AuthenticationToken {
-    fn into_into_dart(self) -> FrbWrapper<AuthenticationToken> {
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<BTreeMap<String, String>>>
+    for BTreeMap<String, String>
+{
+    fn into_into_dart(self) -> FrbWrapper<BTreeMap<String, String>> {
         self.into()
     }
 }
@@ -1601,6 +1786,37 @@ impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<SubscriptionHandle>> for Subsc
 }
 
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<crate::dart::AuthenticationToken> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self.0 {
+            crate::dart::AuthenticationToken::Admin(field0, field1) => [
+                0.into_dart(),
+                field0.into_into_dart().into_dart(),
+                field1.into_into_dart().into_dart(),
+            ]
+            .into_dart(),
+            crate::dart::AuthenticationToken::User(field0) => {
+                [1.into_dart(), field0.into_into_dart().into_dart()].into_dart()
+            },
+            crate::dart::AuthenticationToken::None => [2.into_dart()].into_dart(),
+            _ => {
+                unimplemented!("");
+            },
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for FrbWrapper<crate::dart::AuthenticationToken>
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<crate::dart::AuthenticationToken>>
+    for crate::dart::AuthenticationToken
+{
+    fn into_into_dart(self) -> FrbWrapper<crate::dart::AuthenticationToken> {
+        self.into()
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::dart::ClientError {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
@@ -1672,6 +1888,64 @@ impl flutter_rust_bridge::IntoIntoDart<crate::base_client::query_result::Functio
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<crate::dart::UserIdentifier> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [self.0 .0.into_into_dart().into_dart()].into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for FrbWrapper<crate::dart::UserIdentifier>
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<crate::dart::UserIdentifier>>
+    for crate::dart::UserIdentifier
+{
+    fn into_into_dart(self) -> FrbWrapper<crate::dart::UserIdentifier> {
+        self.into()
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<crate::dart::UserIdentityAttributes> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.0.token_identifier.into_into_dart().into_dart(),
+            self.0.issuer.into_into_dart().into_dart(),
+            self.0.subject.into_into_dart().into_dart(),
+            self.0.name.into_into_dart().into_dart(),
+            self.0.given_name.into_into_dart().into_dart(),
+            self.0.family_name.into_into_dart().into_dart(),
+            self.0.nickname.into_into_dart().into_dart(),
+            self.0.preferred_username.into_into_dart().into_dart(),
+            self.0.profile_url.into_into_dart().into_dart(),
+            self.0.picture_url.into_into_dart().into_dart(),
+            self.0.website_url.into_into_dart().into_dart(),
+            self.0.email.into_into_dart().into_dart(),
+            self.0.email_verified.into_into_dart().into_dart(),
+            self.0.gender.into_into_dart().into_dart(),
+            self.0.birthday.into_into_dart().into_dart(),
+            self.0.timezone.into_into_dart().into_dart(),
+            self.0.language.into_into_dart().into_dart(),
+            self.0.phone_number.into_into_dart().into_dart(),
+            self.0.phone_number_verified.into_into_dart().into_dart(),
+            self.0.address.into_into_dart().into_dart(),
+            self.0.updated_at.into_into_dart().into_dart(),
+            self.0.custom_claims.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for FrbWrapper<crate::dart::UserIdentityAttributes>
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<crate::dart::UserIdentityAttributes>>
+    for crate::dart::UserIdentityAttributes
+{
+    fn into_into_dart(self) -> FrbWrapper<crate::dart::UserIdentityAttributes> {
+        self.into()
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::value::Value {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
@@ -1735,10 +2009,15 @@ impl SseEncode for flutter_rust_bridge::for_generated::anyhow::Error {
     }
 }
 
-impl SseEncode for AuthenticationToken {
+impl SseEncode for BTreeMap<String, String> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AuthenticationToken>>>::sse_encode(flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self), serializer);
+        <RustOpaqueMoi<
+            flutter_rust_bridge::for_generated::RustAutoOpaqueInner<BTreeMap<String, String>>,
+        >>::sse_encode(
+            flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self),
+            serializer,
+        );
     }
 }
 
@@ -1828,7 +2107,9 @@ impl SseEncode for std::collections::HashMap<String, crate::value::Value> {
 }
 
 impl SseEncode
-    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AuthenticationToken>>
+    for RustOpaqueMoi<
+        flutter_rust_bridge::for_generated::RustAutoOpaqueInner<BTreeMap<String, String>>,
+    >
 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -1927,6 +2208,29 @@ impl SseEncode for String {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <Vec<u8>>::sse_encode(self.into_bytes(), serializer);
+    }
+}
+
+impl SseEncode for crate::dart::AuthenticationToken {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        match self {
+            crate::dart::AuthenticationToken::Admin(field0, field1) => {
+                <i32>::sse_encode(0, serializer);
+                <String>::sse_encode(field0, serializer);
+                <Option<crate::dart::UserIdentityAttributes>>::sse_encode(field1, serializer);
+            },
+            crate::dart::AuthenticationToken::User(field0) => {
+                <i32>::sse_encode(1, serializer);
+                <String>::sse_encode(field0, serializer);
+            },
+            crate::dart::AuthenticationToken::None => {
+                <i32>::sse_encode(2, serializer);
+            },
+            _ => {
+                unimplemented!("");
+            },
+        }
     }
 }
 
@@ -2082,6 +2386,26 @@ impl SseEncode for Option<DartWebSocketStateSubscriber> {
     }
 }
 
+impl SseEncode for Option<bool> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <bool>::sse_encode(value, serializer);
+        }
+    }
+}
+
+impl SseEncode for Option<crate::dart::UserIdentityAttributes> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <crate::dart::UserIdentityAttributes>::sse_encode(value, serializer);
+        }
+    }
+}
+
 impl SseEncode for (String, crate::value::Value) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -2100,6 +2424,41 @@ impl SseEncode for u8 {
 impl SseEncode for () {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {}
+}
+
+impl SseEncode for crate::dart::UserIdentifier {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.0, serializer);
+    }
+}
+
+impl SseEncode for crate::dart::UserIdentityAttributes {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <crate::dart::UserIdentifier>::sse_encode(self.token_identifier, serializer);
+        <Option<String>>::sse_encode(self.issuer, serializer);
+        <Option<String>>::sse_encode(self.subject, serializer);
+        <Option<String>>::sse_encode(self.name, serializer);
+        <Option<String>>::sse_encode(self.given_name, serializer);
+        <Option<String>>::sse_encode(self.family_name, serializer);
+        <Option<String>>::sse_encode(self.nickname, serializer);
+        <Option<String>>::sse_encode(self.preferred_username, serializer);
+        <Option<String>>::sse_encode(self.profile_url, serializer);
+        <Option<String>>::sse_encode(self.picture_url, serializer);
+        <Option<String>>::sse_encode(self.website_url, serializer);
+        <Option<String>>::sse_encode(self.email, serializer);
+        <Option<bool>>::sse_encode(self.email_verified, serializer);
+        <Option<String>>::sse_encode(self.gender, serializer);
+        <Option<String>>::sse_encode(self.birthday, serializer);
+        <Option<String>>::sse_encode(self.timezone, serializer);
+        <Option<String>>::sse_encode(self.language, serializer);
+        <Option<String>>::sse_encode(self.phone_number, serializer);
+        <Option<bool>>::sse_encode(self.phone_number_verified, serializer);
+        <Option<String>>::sse_encode(self.address, serializer);
+        <Option<String>>::sse_encode(self.updated_at, serializer);
+        <BTreeMap<String, String>>::sse_encode(self.custom_claims, serializer);
+    }
 }
 
 impl SseEncode for usize {
@@ -2210,17 +2569,17 @@ mod io {
     flutter_rust_bridge::frb_generated_boilerplate_io!();
 
     #[unsafe(no_mangle)]
-    pub extern "C" fn frbgen_convex_dart_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAuthenticationToken(
+    pub extern "C" fn frbgen_convex_dart_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBTreeMapStringString(
         ptr: *const std::ffi::c_void,
     ) {
-        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AuthenticationToken>>::increment_strong_count(ptr as _);
+        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<BTreeMap < String , String >>>::increment_strong_count(ptr as _);
     }
 
     #[unsafe(no_mangle)]
-    pub extern "C" fn frbgen_convex_dart_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAuthenticationToken(
+    pub extern "C" fn frbgen_convex_dart_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBTreeMapStringString(
         ptr: *const std::ffi::c_void,
     ) {
-        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AuthenticationToken>>::decrement_strong_count(ptr as _);
+        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<BTreeMap < String , String >>>::decrement_strong_count(ptr as _);
     }
 
     #[unsafe(no_mangle)]
@@ -2379,17 +2738,17 @@ mod web {
     flutter_rust_bridge::frb_generated_boilerplate_web!();
 
     #[wasm_bindgen]
-    pub fn rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAuthenticationToken(
+    pub fn rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBTreeMapStringString(
         ptr: *const std::ffi::c_void,
     ) {
-        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AuthenticationToken>>::increment_strong_count(ptr as _);
+        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<BTreeMap < String , String >>>::increment_strong_count(ptr as _);
     }
 
     #[wasm_bindgen]
-    pub fn rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAuthenticationToken(
+    pub fn rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBTreeMapStringString(
         ptr: *const std::ffi::c_void,
     ) {
-        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AuthenticationToken>>::decrement_strong_count(ptr as _);
+        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<BTreeMap < String , String >>>::decrement_strong_count(ptr as _);
     }
 
     #[wasm_bindgen]

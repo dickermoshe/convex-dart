@@ -154,13 +154,13 @@ abstract class RustLibApi extends BaseApi {
   Future<void> crateDartLoggingInitLogging();
 
   RustArcIncrementStrongCountFnType
-  get rust_arc_increment_strong_count_AuthenticationToken;
+  get rust_arc_increment_strong_count_BTreeMapStringString;
 
   RustArcDecrementStrongCountFnType
-  get rust_arc_decrement_strong_count_AuthenticationToken;
+  get rust_arc_decrement_strong_count_BTreeMapStringString;
 
   CrossPlatformFinalizerArg
-  get rust_arc_decrement_strong_count_AuthenticationTokenPtr;
+  get rust_arc_decrement_strong_count_BTreeMapStringStringPtr;
 
   RustArcIncrementStrongCountFnType
   get rust_arc_increment_strong_count_BTreeMapStringValue;
@@ -242,7 +242,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          sse_encode_DartFn_Inputs_bool_Output_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAuthenticationToken_AnyhowException(
+          sse_encode_DartFn_Inputs_bool_Output_authentication_token_AnyhowException(
             fetcher,
             serializer,
           );
@@ -798,7 +798,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "init_logging", argNames: []);
 
   Future<void> Function(int, dynamic)
-  encode_DartFn_Inputs_bool_Output_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAuthenticationToken_AnyhowException(
+  encode_DartFn_Inputs_bool_Output_authentication_token_AnyhowException(
     FutureOr<AuthenticationToken> Function(bool) raw,
   ) {
     return (callId, rawArg0) async {
@@ -816,10 +816,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       assert((rawOutput != null) ^ (rawError != null));
       if (rawOutput != null) {
         serializer.buffer.putUint8(0);
-        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAuthenticationToken(
-          rawOutput.value,
-          serializer,
-        );
+        sse_encode_authentication_token(rawOutput.value, serializer);
       } else {
         serializer.buffer.putUint8(1);
         sse_encode_AnyhowException(rawError!.value, serializer);
@@ -906,12 +903,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   RustArcIncrementStrongCountFnType
-  get rust_arc_increment_strong_count_AuthenticationToken => wire
-      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAuthenticationToken;
+  get rust_arc_increment_strong_count_BTreeMapStringString => wire
+      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBTreeMapStringString;
 
   RustArcDecrementStrongCountFnType
-  get rust_arc_decrement_strong_count_AuthenticationToken => wire
-      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAuthenticationToken;
+  get rust_arc_decrement_strong_count_BTreeMapStringString => wire
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBTreeMapStringString;
 
   RustArcIncrementStrongCountFnType
   get rust_arc_increment_strong_count_BTreeMapStringValue => wire
@@ -976,12 +973,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  AuthenticationToken
-  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAuthenticationToken(
+  BTreeMapStringString
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBTreeMapStringString(
     dynamic raw,
   ) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return AuthenticationTokenImpl.frbInternalDcoDecode(raw as List<dynamic>);
+    return BTreeMapStringStringImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -1080,7 +1077,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   FutureOr<AuthenticationToken> Function(bool)
-  dco_decode_DartFn_Inputs_bool_Output_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAuthenticationToken_AnyhowException(
+  dco_decode_DartFn_Inputs_bool_Output_authentication_token_AnyhowException(
     dynamic raw,
   ) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
@@ -1120,12 +1117,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  AuthenticationToken
-  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAuthenticationToken(
+  BTreeMapStringString
+  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBTreeMapStringString(
     dynamic raw,
   ) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return AuthenticationTokenImpl.frbInternalDcoDecode(raw as List<dynamic>);
+    return BTreeMapStringStringImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -1208,6 +1205,24 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  AuthenticationToken dco_decode_authentication_token(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return AuthenticationToken_Admin(
+          dco_decode_String(raw[1]),
+          dco_decode_opt_box_autoadd_user_identity_attributes(raw[2]),
+        );
+      case 1:
+        return AuthenticationToken_User(dco_decode_String(raw[1]));
+      case 2:
+        return AuthenticationToken_None();
+      default:
+        throw Exception("unreachable");
+    }
+  }
+
+  @protected
   bool dco_decode_bool(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as bool;
@@ -1236,6 +1251,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  bool dco_decode_box_autoadd_bool(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as bool;
+  }
+
+  @protected
   ConvexError dco_decode_box_autoadd_convex_error(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_convex_error(raw);
@@ -1245,6 +1266,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   FunctionResult dco_decode_box_autoadd_function_result(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_function_result(raw);
+  }
+
+  @protected
+  UserIdentityAttributes dco_decode_box_autoadd_user_identity_attributes(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_user_identity_attributes(raw);
   }
 
   @protected
@@ -1374,6 +1403,22 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  bool? dco_decode_opt_box_autoadd_bool(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_bool(raw);
+  }
+
+  @protected
+  UserIdentityAttributes? dco_decode_opt_box_autoadd_user_identity_attributes(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null
+        ? null
+        : dco_decode_box_autoadd_user_identity_attributes(raw);
+  }
+
+  @protected
   (String, Value) dco_decode_record_string_value(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -1393,6 +1438,50 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void dco_decode_unit(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return;
+  }
+
+  @protected
+  UserIdentifier dco_decode_user_identifier(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return UserIdentifier(field0: dco_decode_String(arr[0]));
+  }
+
+  @protected
+  UserIdentityAttributes dco_decode_user_identity_attributes(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 22)
+      throw Exception('unexpected arr length: expect 22 but see ${arr.length}');
+    return UserIdentityAttributes(
+      tokenIdentifier: dco_decode_user_identifier(arr[0]),
+      issuer: dco_decode_opt_String(arr[1]),
+      subject: dco_decode_opt_String(arr[2]),
+      name: dco_decode_opt_String(arr[3]),
+      givenName: dco_decode_opt_String(arr[4]),
+      familyName: dco_decode_opt_String(arr[5]),
+      nickname: dco_decode_opt_String(arr[6]),
+      preferredUsername: dco_decode_opt_String(arr[7]),
+      profileUrl: dco_decode_opt_String(arr[8]),
+      pictureUrl: dco_decode_opt_String(arr[9]),
+      websiteUrl: dco_decode_opt_String(arr[10]),
+      email: dco_decode_opt_String(arr[11]),
+      emailVerified: dco_decode_opt_box_autoadd_bool(arr[12]),
+      gender: dco_decode_opt_String(arr[13]),
+      birthday: dco_decode_opt_String(arr[14]),
+      timezone: dco_decode_opt_String(arr[15]),
+      language: dco_decode_opt_String(arr[16]),
+      phoneNumber: dco_decode_opt_String(arr[17]),
+      phoneNumberVerified: dco_decode_opt_box_autoadd_bool(arr[18]),
+      address: dco_decode_opt_String(arr[19]),
+      updatedAt: dco_decode_opt_String(arr[20]),
+      customClaims:
+          dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBTreeMapStringString(
+            arr[21],
+          ),
+    );
   }
 
   @protected
@@ -1444,12 +1533,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  AuthenticationToken
-  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAuthenticationToken(
+  BTreeMapStringString
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBTreeMapStringString(
     SseDeserializer deserializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return AuthenticationTokenImpl.frbInternalSseDecode(
+    return BTreeMapStringStringImpl.frbInternalSseDecode(
       sse_decode_usize(deserializer),
       sse_decode_i_32(deserializer),
     );
@@ -1592,12 +1681,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  AuthenticationToken
-  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAuthenticationToken(
+  BTreeMapStringString
+  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBTreeMapStringString(
     SseDeserializer deserializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return AuthenticationTokenImpl.frbInternalSseDecode(
+    return BTreeMapStringStringImpl.frbInternalSseDecode(
       sse_decode_usize(deserializer),
       sse_decode_i_32(deserializer),
     );
@@ -1695,6 +1784,30 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  AuthenticationToken sse_decode_authentication_token(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        var var_field0 = sse_decode_String(deserializer);
+        var var_field1 = sse_decode_opt_box_autoadd_user_identity_attributes(
+          deserializer,
+        );
+        return AuthenticationToken_Admin(var_field0, var_field1);
+      case 1:
+        var var_field0 = sse_decode_String(deserializer);
+        return AuthenticationToken_User(var_field0);
+      case 2:
+        return AuthenticationToken_None();
+      default:
+        throw UnimplementedError('');
+    }
+  }
+
+  @protected
   bool sse_decode_bool(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getUint8() != 0;
@@ -1723,6 +1836,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  bool sse_decode_box_autoadd_bool(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_bool(deserializer));
+  }
+
+  @protected
   ConvexError sse_decode_box_autoadd_convex_error(
     SseDeserializer deserializer,
   ) {
@@ -1736,6 +1855,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_function_result(deserializer));
+  }
+
+  @protected
+  UserIdentityAttributes sse_decode_box_autoadd_user_identity_attributes(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_user_identity_attributes(deserializer));
   }
 
   @protected
@@ -1893,6 +2020,30 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  bool? sse_decode_opt_box_autoadd_bool(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_bool(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  UserIdentityAttributes? sse_decode_opt_box_autoadd_user_identity_attributes(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_user_identity_attributes(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
   (String, Value) sse_decode_record_string_value(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_field0 = sse_decode_String(deserializer);
@@ -1909,6 +2060,69 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   void sse_decode_unit(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+  }
+
+  @protected
+  UserIdentifier sse_decode_user_identifier(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_field0 = sse_decode_String(deserializer);
+    return UserIdentifier(field0: var_field0);
+  }
+
+  @protected
+  UserIdentityAttributes sse_decode_user_identity_attributes(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_tokenIdentifier = sse_decode_user_identifier(deserializer);
+    var var_issuer = sse_decode_opt_String(deserializer);
+    var var_subject = sse_decode_opt_String(deserializer);
+    var var_name = sse_decode_opt_String(deserializer);
+    var var_givenName = sse_decode_opt_String(deserializer);
+    var var_familyName = sse_decode_opt_String(deserializer);
+    var var_nickname = sse_decode_opt_String(deserializer);
+    var var_preferredUsername = sse_decode_opt_String(deserializer);
+    var var_profileUrl = sse_decode_opt_String(deserializer);
+    var var_pictureUrl = sse_decode_opt_String(deserializer);
+    var var_websiteUrl = sse_decode_opt_String(deserializer);
+    var var_email = sse_decode_opt_String(deserializer);
+    var var_emailVerified = sse_decode_opt_box_autoadd_bool(deserializer);
+    var var_gender = sse_decode_opt_String(deserializer);
+    var var_birthday = sse_decode_opt_String(deserializer);
+    var var_timezone = sse_decode_opt_String(deserializer);
+    var var_language = sse_decode_opt_String(deserializer);
+    var var_phoneNumber = sse_decode_opt_String(deserializer);
+    var var_phoneNumberVerified = sse_decode_opt_box_autoadd_bool(deserializer);
+    var var_address = sse_decode_opt_String(deserializer);
+    var var_updatedAt = sse_decode_opt_String(deserializer);
+    var var_customClaims =
+        sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBTreeMapStringString(
+          deserializer,
+        );
+    return UserIdentityAttributes(
+      tokenIdentifier: var_tokenIdentifier,
+      issuer: var_issuer,
+      subject: var_subject,
+      name: var_name,
+      givenName: var_givenName,
+      familyName: var_familyName,
+      nickname: var_nickname,
+      preferredUsername: var_preferredUsername,
+      profileUrl: var_profileUrl,
+      pictureUrl: var_pictureUrl,
+      websiteUrl: var_websiteUrl,
+      email: var_email,
+      emailVerified: var_emailVerified,
+      gender: var_gender,
+      birthday: var_birthday,
+      timezone: var_timezone,
+      language: var_language,
+      phoneNumber: var_phoneNumber,
+      phoneNumberVerified: var_phoneNumberVerified,
+      address: var_address,
+      updatedAt: var_updatedAt,
+      customClaims: var_customClaims,
+    );
   }
 
   @protected
@@ -1972,13 +2186,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
-  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAuthenticationToken(
-    AuthenticationToken self,
+  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBTreeMapStringString(
+    BTreeMapStringString self,
     SseSerializer serializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
-      (self as AuthenticationTokenImpl).frbInternalSseEncode(move: true),
+      (self as BTreeMapStringStringImpl).frbInternalSseEncode(move: true),
       serializer,
     );
   }
@@ -2119,13 +2333,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
-  sse_encode_DartFn_Inputs_bool_Output_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAuthenticationToken_AnyhowException(
+  sse_encode_DartFn_Inputs_bool_Output_authentication_token_AnyhowException(
     FutureOr<AuthenticationToken> Function(bool) self,
     SseSerializer serializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_DartOpaque(
-      encode_DartFn_Inputs_bool_Output_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAuthenticationToken_AnyhowException(
+      encode_DartFn_Inputs_bool_Output_authentication_token_AnyhowException(
         self,
       ),
       serializer,
@@ -2185,13 +2399,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
-  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAuthenticationToken(
-    AuthenticationToken self,
+  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBTreeMapStringString(
+    BTreeMapStringString self,
     SseSerializer serializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
-      (self as AuthenticationTokenImpl).frbInternalSseEncode(move: null),
+      (self as BTreeMapStringStringImpl).frbInternalSseEncode(move: null),
       serializer,
     );
   }
@@ -2298,6 +2512,28 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_authentication_token(
+    AuthenticationToken self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case AuthenticationToken_Admin(
+        field0: final field0,
+        field1: final field1,
+      ):
+        sse_encode_i_32(0, serializer);
+        sse_encode_String(field0, serializer);
+        sse_encode_opt_box_autoadd_user_identity_attributes(field1, serializer);
+      case AuthenticationToken_User(field0: final field0):
+        sse_encode_i_32(1, serializer);
+        sse_encode_String(field0, serializer);
+      case AuthenticationToken_None():
+        sse_encode_i_32(2, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_bool(bool self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putUint8(self ? 1 : 0);
@@ -2330,6 +2566,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_box_autoadd_bool(bool self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_bool(self, serializer);
+  }
+
+  @protected
   void sse_encode_box_autoadd_convex_error(
     ConvexError self,
     SseSerializer serializer,
@@ -2345,6 +2587,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_function_result(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_user_identity_attributes(
+    UserIdentityAttributes self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_user_identity_attributes(self, serializer);
   }
 
   @protected
@@ -2495,6 +2746,29 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_opt_box_autoadd_bool(bool? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_bool(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_user_identity_attributes(
+    UserIdentityAttributes? self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_user_identity_attributes(self, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_record_string_value(
     (String, Value) self,
     SseSerializer serializer,
@@ -2513,6 +2787,48 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   void sse_encode_unit(void self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+  }
+
+  @protected
+  void sse_encode_user_identifier(
+    UserIdentifier self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.field0, serializer);
+  }
+
+  @protected
+  void sse_encode_user_identity_attributes(
+    UserIdentityAttributes self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_user_identifier(self.tokenIdentifier, serializer);
+    sse_encode_opt_String(self.issuer, serializer);
+    sse_encode_opt_String(self.subject, serializer);
+    sse_encode_opt_String(self.name, serializer);
+    sse_encode_opt_String(self.givenName, serializer);
+    sse_encode_opt_String(self.familyName, serializer);
+    sse_encode_opt_String(self.nickname, serializer);
+    sse_encode_opt_String(self.preferredUsername, serializer);
+    sse_encode_opt_String(self.profileUrl, serializer);
+    sse_encode_opt_String(self.pictureUrl, serializer);
+    sse_encode_opt_String(self.websiteUrl, serializer);
+    sse_encode_opt_String(self.email, serializer);
+    sse_encode_opt_box_autoadd_bool(self.emailVerified, serializer);
+    sse_encode_opt_String(self.gender, serializer);
+    sse_encode_opt_String(self.birthday, serializer);
+    sse_encode_opt_String(self.timezone, serializer);
+    sse_encode_opt_String(self.language, serializer);
+    sse_encode_opt_String(self.phoneNumber, serializer);
+    sse_encode_opt_box_autoadd_bool(self.phoneNumberVerified, serializer);
+    sse_encode_opt_String(self.address, serializer);
+    sse_encode_opt_String(self.updatedAt, serializer);
+    sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerBTreeMapStringString(
+      self.customClaims,
+      serializer,
+    );
   }
 
   @protected
@@ -2565,14 +2881,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 }
 
 @sealed
-class AuthenticationTokenImpl extends RustOpaque
-    implements AuthenticationToken {
+class BTreeMapStringStringImpl extends RustOpaque
+    implements BTreeMapStringString {
   // Not to be used by end users
-  AuthenticationTokenImpl.frbInternalDcoDecode(List<dynamic> wire)
+  BTreeMapStringStringImpl.frbInternalDcoDecode(List<dynamic> wire)
     : super.frbInternalDcoDecode(wire, _kStaticData);
 
   // Not to be used by end users
-  AuthenticationTokenImpl.frbInternalSseDecode(
+  BTreeMapStringStringImpl.frbInternalSseDecode(
     BigInt ptr,
     int externalSizeOnNative,
   ) : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
@@ -2581,15 +2897,15 @@ class AuthenticationTokenImpl extends RustOpaque
     rustArcIncrementStrongCount: RustLib
         .instance
         .api
-        .rust_arc_increment_strong_count_AuthenticationToken,
+        .rust_arc_increment_strong_count_BTreeMapStringString,
     rustArcDecrementStrongCount: RustLib
         .instance
         .api
-        .rust_arc_decrement_strong_count_AuthenticationToken,
+        .rust_arc_decrement_strong_count_BTreeMapStringString,
     rustArcDecrementStrongCountPtr: RustLib
         .instance
         .api
-        .rust_arc_decrement_strong_count_AuthenticationTokenPtr,
+        .rust_arc_decrement_strong_count_BTreeMapStringStringPtr,
   );
 }
 
