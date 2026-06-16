@@ -1,0 +1,70 @@
+name: Example
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Flutter integration tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    env:
+      CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+
+    steps:
+      - name: Check Convex secret
+        run: |
+          if [ -z "$CONVEX_DEPLOY_KEY" ]; then
+            echo "::error::Set the CONVEX_DEPLOY_KEY repository secret to a Convex deploy key."
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: example/package-lock.json
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Set up Rust
+        run: rustup toolchain install stable --profile minimal
+
+      - name: Install JavaScript dependencies
+        run: npm ci
+        working-directory: example
+
+      - name: Install Flutter dependencies
+        run: flutter pub get
+
+      - name: Deploy Convex backend
+        run: npx convex deploy --typecheck enable
+        working-directory: example
+
+      - name: Generate Dart Convex client
+        run: dart run convex_dart_cli generate --public-serialize --prod
+        working-directory: example
+
+      - name: Analyze example
+        run: flutter analyze
+        working-directory: example
+
+      - name: Run example integration tests
+        run: flutter test integration_test/test_all.dart
+        working-directory: example

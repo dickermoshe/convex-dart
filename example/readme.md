@@ -70,3 +70,13 @@ example/
    ```bash
    flutter test integration_test/test_all.dart 
    ```
+
+## CI
+
+The GitHub Actions workflow in `.github/workflows/example.yml` runs the example
+against a Convex deployment. Add a repository secret named `CONVEX_DEPLOY_KEY`
+with a Convex deploy key before enabling the workflow.
+
+The workflow installs Node.js, Flutter, and Rust, deploys the Convex backend,
+regenerates the Dart client with `convex_dart_cli generate --public-serialize
+--prod`, then runs `flutter analyze` and the integration test entrypoint.
