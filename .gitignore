@@ -200,4 +200,5 @@ target
 /.idea/
 
 settings.json
+!.vscode/settings.json
 .fvmrc

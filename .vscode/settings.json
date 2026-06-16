@@ -1,0 +1,5 @@
+{
+    "rust-analyzer.linkedProjects": [
+        "convex_dart/rust/Cargo.toml"
+    ]
+}
