@@ -35,11 +35,9 @@ BTreeMapStringValue serialize(Query17Args args) {
 @pragma("vm:prefer-inline")
 Query17Response deserialize(Value map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
-    (on574657) => (
-      i: on574657.containsKey('i')
-          ? Defined<Uint8ListWithEquality>(
-              (on574657['i'] as Uint8ListWithEquality),
-            )
+    (_v0) => (
+      i: _v0.containsKey('i')
+          ? Defined<Uint8ListWithEquality>((_v0['i'] as Uint8ListWithEquality))
           : Undefined<Uint8ListWithEquality>(),
     ),
   );

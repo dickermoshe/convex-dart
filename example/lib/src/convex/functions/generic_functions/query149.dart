@@ -41,12 +41,12 @@ BTreeMapStringValue serialize(Query149Args args) {
 @pragma("vm:prefer-inline")
 Query149Response deserialize(Value map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
-    (on271330) => (
-      i: (on271330['i'] as IMap<String, dynamic>).then(
-        (on249637) => (
-          a: $foo.validate(on249637['a']),
-          b: $123_0.validate(on249637['b']),
-          c: $false.validate(on249637['c']),
+    (_v0) => (
+      i: (_v0['i'] as IMap<String, dynamic>).then(
+        (_v1) => (
+          a: $foo.validate(_v1['a']),
+          b: $123_0.validate(_v1['b']),
+          c: $false.validate(_v1['c']),
         ),
       ),
     ),

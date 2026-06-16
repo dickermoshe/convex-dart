@@ -43,16 +43,16 @@ BTreeMapStringValue serialize(Query114Args args) {
 @pragma("vm:prefer-inline")
 Query114Response deserialize(Value map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
-    (on333301) => (
-      i: (on333301['i'] as IMap<String, dynamic>).then(
-        (on521306) => (
-          email: on521306.containsKey('email')
-              ? Defined<String>((on521306['email'] as String))
+    (_v0) => (
+      i: (_v0['i'] as IMap<String, dynamic>).then(
+        (_v1) => (
+          email: _v1.containsKey('email')
+              ? Defined<String>((_v1['email'] as String))
               : Undefined<String>(),
-          name: on521306.containsKey('name')
-              ? Defined<String>((on521306['name'] as String))
+          name: _v1.containsKey('name')
+              ? Defined<String>((_v1['name'] as String))
               : Undefined<String>(),
-          phone: (on521306['phone'] as String?),
+          phone: (_v1['phone'] as String?),
         ),
       ),
     ),

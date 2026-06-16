@@ -41,12 +41,12 @@ GetTasksByStatusResponse deserialize(Value map) {
   return (
     body: (decodeValue(map) as IList<dynamic>)
         .map(
-          (on216419) => (on216419 as IMap<String, dynamic>).then(
-            (on888446) => (
-              creationTime: (on888446['_creationTime'] as double),
-              id: TasksId(on888446['_id'] as String),
-              isCompleted: (on888446['isCompleted'] as bool),
-              text: (on888446['text'] as String),
+          (_v0) => (_v0 as IMap<String, dynamic>).then(
+            (_v1) => (
+              creationTime: (_v1['_creationTime'] as double),
+              id: TasksId(_v1['_id'] as String),
+              isCompleted: (_v1['isCompleted'] as bool),
+              text: (_v1['text'] as String),
             ),
           ),
         )

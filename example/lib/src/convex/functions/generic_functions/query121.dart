@@ -32,30 +32,28 @@ BTreeMapStringValue serialize(Query121Args args) {
       'i': encodeValue(
         args.i
             .map(
-              (on910882) => encodeValue({
+              (_v0) => encodeValue({
                 'posts': encodeValue(
-                  on910882.posts
+                  _v0.posts
                       .map(
-                        (on585570) => encodeValue({
+                        (_v1) => encodeValue({
                           'content': encodeValue(
-                            on585570.content.split(
-                              (on333388) => encodeValue(on333388),
-                              (on99840) => encodeValue({
+                            _v1.content.split(
+                              (_v2) => encodeValue(_v2),
+                              (_v3) => encodeValue({
                                 'media': encodeValue(
-                                  on99840.media
-                                      .map((on845657) => encodeValue(on845657))
+                                  _v3.media
+                                      .map((_v4) => encodeValue(_v4))
                                       .toIList(),
                                 ),
-                                'text': encodeValue(on99840.text),
+                                'text': encodeValue(_v3.text),
                               }),
                             ),
                           ),
-                          'id': encodeValue(on585570.id),
-                          'likes': encodeValue(on585570.likes),
+                          'id': encodeValue(_v1.id),
+                          'likes': encodeValue(_v1.likes),
                           'tags': encodeValue(
-                            on585570.tags
-                                .map((on834667) => encodeValue(on834667))
-                                .toIList(),
+                            _v1.tags.map((_v5) => encodeValue(_v5)).toIList(),
                           ),
                         }),
                       )
@@ -63,23 +61,23 @@ BTreeMapStringValue serialize(Query121Args args) {
                 ),
                 'user': encodeValue({
                   'preferences': encodeValue({
-                    for (final on615995 in on910882.user.preferences.entries)
-                      on615995.key: encodeValue(
+                    for (final _v6 in _v0.user.preferences.entries)
+                      _v6.key: encodeValue(
                         encodeValue(
-                          on615995.value.split(
-                            (on809135) => encodeValue(on809135),
-                            (on961300) => encodeValue(on961300),
-                            (on200354) => encodeValue(on200354),
+                          _v6.value.split(
+                            (_v7) => encodeValue(_v7),
+                            (_v8) => encodeValue(_v8),
+                            (_v9) => encodeValue(_v9),
                           ),
                         ),
                       ),
                   }),
                   'profile': encodeValue({
-                    if (on910882.user.profile.avatar.isDefined)
+                    if (_v0.user.profile.avatar.isDefined)
                       'avatar': encodeValue(
-                        on910882.user.profile.avatar.asDefined().value,
+                        _v0.user.profile.avatar.asDefined().value,
                       ),
-                    'name': encodeValue(on910882.user.profile.name),
+                    'name': encodeValue(_v0.user.profile.name),
                   }),
                 }),
               }),
@@ -93,88 +91,83 @@ BTreeMapStringValue serialize(Query121Args args) {
 @pragma("vm:prefer-inline")
 Query121Response deserialize(Value map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
-    (on420234) => (
-      i: (on420234['i'] as IList<dynamic>)
+    (_v0) => (
+      i: (_v0['i'] as IList<dynamic>)
           .map(
-            (on307353) => (on307353 as IMap<String, dynamic>).then(
-              (on278291) => (
-                posts: (on278291['posts'] as IList<dynamic>)
+            (_v1) => (_v1 as IMap<String, dynamic>).then(
+              (_v2) => (
+                posts: (_v2['posts'] as IList<dynamic>)
                     .map(
-                      (on356554) => (on356554 as IMap<String, dynamic>).then(
-                        (on470616) => (
+                      (_v3) => (_v3 as IMap<String, dynamic>).then(
+                        (_v4) => (
                           content:
                               Union2<
                                 String,
                                 ({IList<String> media, String text})
                               >(() {
                                 try {
-                                  return (on470616['content'] as String);
+                                  return (_v4['content'] as String);
                                 } catch (e) {}
 
                                 try {
-                                  return (on470616['content']
+                                  return (_v4['content']
                                           as IMap<String, dynamic>)
                                       .then(
-                                        (on496850) => (
+                                        (_v5) => (
                                           media:
-                                              (on496850['media']
-                                                      as IList<dynamic>)
-                                                  .map(
-                                                    (on756620) =>
-                                                        (on756620 as String),
-                                                  )
+                                              (_v5['media'] as IList<dynamic>)
+                                                  .map((_v6) => (_v6 as String))
                                                   .toIList(),
-                                          text: (on496850['text'] as String),
+                                          text: (_v5['text'] as String),
                                         ),
                                       );
                                 } catch (e) {}
 
                                 throw Exception(
-                                  (on470616['content'].toString() ?? "null") +
+                                  (_v4['content'].toString() ?? "null") +
                                       r" cannot be deserialized into a Union2<String, ({IList<String> media,String text})>",
                                 );
                               }()),
-                          id: (on470616['id'] as String),
-                          likes: (on470616['likes'] as double),
-                          tags: (on470616['tags'] as IList<dynamic>)
-                              .map((on898367) => (on898367 as String))
+                          id: (_v4['id'] as String),
+                          likes: (_v4['likes'] as double),
+                          tags: (_v4['tags'] as IList<dynamic>)
+                              .map((_v7) => (_v7 as String))
                               .toIList(),
                         ),
                       ),
                     )
                     .toIList(),
-                user: (on278291['user'] as IMap<String, dynamic>).then(
-                  (on90711) => (
-                    preferences:
-                        (on90711['preferences'] as IMap<String, dynamic>).map(
-                          (on938481, on34699) => MapEntry(
-                            on938481,
-                            Union3<String, double, bool>(() {
-                              try {
-                                return (on34699 as String);
-                              } catch (e) {}
+                user: (_v2['user'] as IMap<String, dynamic>).then(
+                  (_v8) => (
+                    preferences: (_v8['preferences'] as IMap<String, dynamic>).map(
+                      (_v9, _v10) => MapEntry(
+                        _v9,
+                        Union3<String, double, bool>(() {
+                          try {
+                            return (_v10 as String);
+                          } catch (e) {}
 
-                              try {
-                                return (on34699 as double);
-                              } catch (e) {}
+                          try {
+                            return (_v10 as double);
+                          } catch (e) {}
 
-                              try {
-                                return (on34699 as bool);
-                              } catch (e) {}
+                          try {
+                            return (_v10 as bool);
+                          } catch (e) {}
 
-                              throw Exception(
-                                (on34699.toString() ?? "null") +
-                                    r" cannot be deserialized into a Union3<String, double, bool>",
-                              );
-                            }()),
-                          ),
-                        ),
-                    profile: (on90711['profile'] as IMap<String, dynamic>).then(
-                      (on501467) => (
-                        avatar: on501467.containsKey('avatar')
-                            ? Defined<String>((on501467['avatar'] as String))
+                          throw Exception(
+                            (_v10.toString() ?? "null") +
+                                r" cannot be deserialized into a Union3<String, double, bool>",
+                          );
+                        }()),
+                      ),
+                    ),
+                    profile: (_v8['profile'] as IMap<String, dynamic>).then(
+                      (_v11) => (
+                        avatar: _v11.containsKey('avatar')
+                            ? Defined<String>((_v11['avatar'] as String))
                             : Undefined<String>(),
-                        name: (on501467['name'] as String),
+                        name: (_v11['name'] as String),
                       ),
                     ),
                   ),

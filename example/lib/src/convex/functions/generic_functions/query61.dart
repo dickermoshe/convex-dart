@@ -29,7 +29,7 @@ Stream<Query61Response> query61Stream(Query61Args args) {
 BTreeMapStringValue serialize(Query61Args args) {
   return hashmapToBtreemap(
     hashmap: {
-      'i': encodeValue(args.i.map((on89350) => encodeValue(on89350)).toIList()),
+      'i': encodeValue(args.i.map((_v0) => encodeValue(_v0)).toIList()),
     },
   );
 }
@@ -37,11 +37,8 @@ BTreeMapStringValue serialize(Query61Args args) {
 @pragma("vm:prefer-inline")
 Query61Response deserialize(Value map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
-    (on410954) => (
-      i: (on410954['i'] as IList<dynamic>)
-          .map((on63173) => (on63173 as int?))
-          .toIList(),
-    ),
+    (_v0) =>
+        (i: (_v0['i'] as IList<dynamic>).map((_v1) => (_v1 as int?)).toIList()),
   );
 }
 

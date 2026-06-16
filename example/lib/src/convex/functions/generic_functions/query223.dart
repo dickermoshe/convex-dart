@@ -30,10 +30,7 @@ BTreeMapStringValue serialize(Query223Args args) {
   return hashmapToBtreemap(
     hashmap: {
       'i': encodeValue(
-        args.i.split(
-          (on52429) => encodeValue(on52429),
-          (on807599) => encodeValue(on807599),
-        ),
+        args.i.split((_v0) => encodeValue(_v0), (_v1) => encodeValue(_v1)),
       ),
     },
   );
@@ -42,18 +39,18 @@ BTreeMapStringValue serialize(Query223Args args) {
 @pragma("vm:prefer-inline")
 Query223Response deserialize(Value map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
-    (on441649) => (
+    (_v0) => (
       i: Union2<int, Uint8ListWithEquality>(() {
         try {
-          return (on441649['i'] as int);
+          return (_v0['i'] as int);
         } catch (e) {}
 
         try {
-          return (on441649['i'] as Uint8ListWithEquality);
+          return (_v0['i'] as Uint8ListWithEquality);
         } catch (e) {}
 
         throw Exception(
-          (on441649['i'].toString() ?? "null") +
+          (_v0['i'].toString() ?? "null") +
               r" cannot be deserialized into a Union2<int, Uint8ListWithEquality>",
         );
       }()),

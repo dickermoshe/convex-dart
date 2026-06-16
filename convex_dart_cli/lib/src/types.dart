@@ -6,14 +6,12 @@ import 'package:recase/recase.dart';
 import 'package:path/path.dart' as path;
 import 'package:collection/collection.dart';
 import 'package:dart_style/dart_style.dart';
-import 'dart:math';
 part 'types.mapper.dart';
 
 final deepEqual = DeepCollectionEquality.unordered();
 final formatter = DartFormatter(
   languageVersion: DartFormatter.latestLanguageVersion,
 );
-final random = Random();
 
 class ClientBuildContext {
   final Map<String, String> outputs = {};
@@ -28,9 +26,26 @@ class FunctionBuildContext {
   final StringBuffer headerBuffer = StringBuffer();
   final StringBuffer functionBuffer = StringBuffer();
   final StringBuffer typedefBuffer = StringBuffer();
+  final TempNameAllocator tempNames = TempNameAllocator();
 
   final ClientBuildContext clientContext;
   FunctionBuildContext(this.clientContext);
+
+  void resetTempNames() {
+    tempNames.reset();
+  }
+}
+
+class TempNameAllocator {
+  int _next = 0;
+
+  String next() {
+    return "_v${_next++}";
+  }
+
+  void reset() {
+    _next = 0;
+  }
 }
 
 /// A simple wrapper around a function spec that provides some helper utilities
@@ -589,11 +604,13 @@ Stream<$returnsTypeName> ${functionName}Stream(${argsTypeName != null ? "$argsTy
     if (args is JsAny) {
       serializeCode = "{}";
     } else {
+      context.resetTempNames();
       serializeCode = args.serialize(context, "args", nullable: false);
       // Remove the "encodeValue(" and ")"
       serializeCode = serializeCode.substring(12, serializeCode.length - 1);
     }
 
+    context.resetTempNames();
     String deserializeCode = returns.deserialize(
       context,
       "decodeValue(map)",
@@ -1062,7 +1079,7 @@ class _ObjectsUnion extends _BaseUnion {
 
     final List<String> ons = [];
     for (final type in types) {
-      final argName = "on${random.nextInt(1000000)}";
+      final argName = context.tempNames.next();
       ons.add(
         "($argName) => ${type.serialize(context, argName, nullable: nullable)}",
       );
@@ -1202,7 +1219,7 @@ class JsRecord extends JsType with JsRecordMappable {
     required bool nullable,
   }) {
     final dot = nullable ? "?." : ".";
-    final argName = "on${random.nextInt(1000000)}";
+    final argName = context.tempNames.next();
     return "encodeValue({for (final $argName in $name${dot}entries) $argName${dot}key: encodeValue(${values.fieldType.serialize(context, "$argName${dot}value", nullable: nullable)})})";
   }
 
@@ -1214,8 +1231,8 @@ class JsRecord extends JsType with JsRecordMappable {
   }) {
     final suffix = nullable ? "?" : "";
     final dot = nullable ? "?." : ".";
-    final keyArgName = "on${random.nextInt(1000000)}";
-    final valueArgName = "on${random.nextInt(1000000)}";
+    final keyArgName = context.tempNames.next();
+    final valueArgName = context.tempNames.next();
     return "($name as IMap<String, dynamic>$suffix)${dot}map(($keyArgName, $valueArgName) => MapEntry( $keyArgName, ${values.fieldType.deserialize(context, valueArgName, nullable: nullable)}))";
   }
 }
@@ -1282,7 +1299,7 @@ class JsObject extends JsType with JsObjectMappable {
   }) {
     final suffix = nullable ? "?" : "";
     final dot = nullable ? "?." : ".";
-    final argName = "on${random.nextInt(1000000)}";
+    final argName = context.tempNames.next();
     final buffer = StringBuffer(
       "($name as IMap<String, dynamic>$suffix)${dot}then(($argName) => (",
     );
@@ -1318,7 +1335,7 @@ class JsArray extends JsType with JsArrayMappable {
     required bool nullable,
   }) {
     final dot = nullable ? "?." : ".";
-    final argName = "on${random.nextInt(1000000)}";
+    final argName = context.tempNames.next();
     return "encodeValue($name${dot}map(($argName) => ${value.serialize(context, argName, nullable: nullable)})${dot}toIList())";
   }
 
@@ -1330,7 +1347,7 @@ class JsArray extends JsType with JsArrayMappable {
   }) {
     final suffix = nullable ? "?" : "";
     final dot = nullable ? "?." : ".";
-    final randName = "on${random.nextInt(1000000)}";
+    final randName = context.tempNames.next();
     return "($name as IList<dynamic>$suffix)${dot}map(($randName) => ${value.deserialize(context, randName, nullable: nullable)})${dot}toIList()";
   }
 }
