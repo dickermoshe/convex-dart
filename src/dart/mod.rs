@@ -115,7 +115,7 @@ pub trait QuerySubscriber: Send + Sync {
     // Due to restrictions on flutter_rust_bridge, we have made this function async
     // We've also unified on_error and on_update into a single callback
     /// Called when a new update is received
-    fn on_update(&self, value: FunctionResult) -> impl Future<Output = ()> ;
+    async fn on_update(&self, value: FunctionResult);
 }
 
 /// Adapter for Dart functions as subscribers, handling async callbacks.
@@ -134,6 +134,7 @@ impl DartQuerySubscriber {
 
 
 impl QuerySubscriber for DartQuerySubscriber {
+    #[frb]
     async fn on_update(&self, value: FunctionResult) {
         let _ = (self.on_update)(value).await;
     }
