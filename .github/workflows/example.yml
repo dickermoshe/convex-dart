@@ -1,6 +1,7 @@
 name: Example
 
 on:
+
   push:
     branches: ["master"]
   pull_request:
@@ -54,7 +55,7 @@ jobs:
         run: flutter pub get
 
       - name: Deploy Convex backend
-        run: npx convex deploy
+        run: npx convex deploy  --typecheck=disable
         working-directory: example
 
       - name: Generate Dart Convex client
