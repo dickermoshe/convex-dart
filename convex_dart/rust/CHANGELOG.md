@@ -1,3 +1,16 @@
+# 0.10.4
+
+- Optimizations to `check_valid_field_name` in `sync_types`
+- Fix for memory leak in query subscriptions
+  (https://github.com/get-convex/convex-rs/issues/15)
+- Bump rust-version minimum from 1.80.1 to 1.85
+
+# 0.10.3
+
+- Fix for incorrect client state on WebSocket reconnect
+- New `set_auth_callback` method on `ConvexClient` to allow token refresh on
+  WebSocket reconnect
+
 # 0.10.2
 
 - Fix for deadlock between client and websocket worker tasks

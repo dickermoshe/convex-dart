@@ -2,6 +2,8 @@
 //! for better dart support.
 use std::{
     collections::{BTreeMap, HashMap},
+    future::Future,
+    pin::Pin,
     sync::Arc,
 };
 
@@ -23,14 +25,17 @@ use futures::{
 };
 use log::debug; // Logging for debugging purposes
 use parking_lot::Mutex;
+use tokio::sync::mpsc;
 
 use crate::{
-    ConvexClient,
-    ConvexClientBuilder,
-    ConvexError,
-    FunctionResult,
-    Value,
+    AuthTokenFetcher, ConvexClient, ConvexClientBuilder, ConvexError, FunctionResult, Value,
 };
+
+pub use crate::WebSocketState;
+
+pub use convex_sync_types::{AuthenticationToken, UserIdentityAttributes};
+
+mod logging;
 
 // Custom error type for Convex client operations, exposed to Dart.
 // Instead of serializing ConvexError into a string, we directly pass the
@@ -66,12 +71,51 @@ impl From<anyhow::Error> for ClientError {
     }
 }
 
+/// Callback wrapper for dynamic auth token fetching from Dart.
+///
+/// The callback is invoked immediately (with `force_refresh=false`) and again
+/// on every websocket reconnect (with `force_refresh=true`).
+pub struct DartAuthTokenFetcher {
+    fetcher: Arc<dyn Fn(bool) -> DartFnFuture<anyhow::Result<AuthenticationToken>> + Send + Sync>,
+}
+
+impl DartAuthTokenFetcher {
+    #[frb(sync)]
+    pub fn new(
+        fetcher: impl Fn(bool) -> DartFnFuture<anyhow::Result<AuthenticationToken>> + Send + Sync + 'static,
+    ) -> Self {
+        DartAuthTokenFetcher {
+            fetcher: Arc::new(fetcher),
+        }
+    }
+}
+
+/// Callback wrapper for WebSocket connection state changes from Dart.
+#[derive(Clone)]
+pub struct DartWebSocketStateSubscriber {
+    on_state_change: Arc<dyn Fn(WebSocketState) -> DartFnFuture<anyhow::Result<()>> + Send + Sync>,
+}
+
+impl DartWebSocketStateSubscriber {
+    #[frb(sync)]
+    pub fn new(
+        on_state_change: impl Fn(WebSocketState) -> DartFnFuture<anyhow::Result<()>>
+            + Send
+            + Sync
+            + 'static,
+    ) -> Self {
+        DartWebSocketStateSubscriber {
+            on_state_change: Arc::new(on_state_change),
+        }
+    }
+}
+
 /// Trait defining the interface for handling subscription updates.
 pub trait QuerySubscriber: Send + Sync {
     // Due to restrictions on flutter_rust_bridge, we have made this function async
     // We've also unified on_error and on_update into a single callback
     /// Called when a new update is received
-    async fn on_update(&self, value: FunctionResult);
+    fn on_update(&self, value: FunctionResult) -> impl Future<Output = ()> ;
 }
 
 /// Adapter for Dart functions as subscribers, handling async callbacks.
@@ -113,7 +157,7 @@ impl SubscriptionHandle {
     #[frb(sync)]
     pub fn cancel(&self) {
         if let Some(sender) = self.cancel_sender.lock().take() {
-            sender.send(()).unwrap();
+            let _ = sender.send(());
         }
     }
 }
@@ -127,6 +171,7 @@ impl SubscriptionHandle {
 pub struct MobileConvexClient {
     deployment_url: String,
     client_id: String,
+    web_socket_state_subscriber: Option<Arc<DartWebSocketStateSubscriber>>,
     client: OnceCell<ConvexClient>,
     rt: tokio::runtime::Runtime,
 }
@@ -139,8 +184,15 @@ impl MobileConvexClient {
     ///
     /// The `client_id` should be a string representing the name and version of
     /// the foreign client.
+    ///
+    /// Optionally pass a [DartWebSocketStateSubscriber] to receive connection
+    /// state updates (`Connecting` / `Connected`).
     #[frb(sync)]
-    pub fn new(deployment_url: String, client_id: String) -> MobileConvexClient {
+    pub fn new(
+        deployment_url: String,
+        client_id: String,
+        web_socket_state_subscriber: Option<DartWebSocketStateSubscriber>,
+    ) -> MobileConvexClient {
         let rt = tokio::runtime::Builder::new_multi_thread()
             .enable_all()
             .build()
@@ -148,6 +200,7 @@ impl MobileConvexClient {
         MobileConvexClient {
             deployment_url,
             client_id,
+            web_socket_state_subscriber: web_socket_state_subscriber.map(Arc::new),
             client: OnceCell::new(),
             rt,
         }
@@ -165,12 +218,25 @@ impl MobileConvexClient {
         self.client
             .get_or_try_init(async {
                 let client_id = self.client_id.to_owned();
+                let (tx, mut rx) = mpsc::channel(1);
+                let possible_subscriber = self.web_socket_state_subscriber.clone();
+                if let Some(subscriber) = possible_subscriber.clone() {
+                    self.rt.spawn(async move {
+                        while let Some(state) = rx.recv().await {
+                            let _ = (subscriber.on_state_change)(state).await;
+                        }
+                    });
+                }
+
+                let has_subscriber = possible_subscriber.is_some();
                 self.rt
                     .spawn(async move {
-                        ConvexClientBuilder::new(url.as_str())
-                            .with_client_id(&client_id)
-                            .build()
-                            .await
+                        let mut builder =
+                            ConvexClientBuilder::new(url.as_str()).with_client_id(&client_id);
+                        if has_subscriber {
+                            builder = builder.with_on_state_change(tx);
+                        }
+                        builder.build().await
                     })
                     .await?
             })
@@ -231,11 +297,15 @@ impl MobileConvexClient {
             loop {
                 select_biased! {
                     new_val = subscription.next().fuse() => {
-                        let new_val = new_val.expect("Client dropped prematurely");
-                        // Instead of serializing the result to Dart, and calling
-                        // specific on_error and on_update callbacks, we've directly
-                        // pass the new event to the subscriber.
-                        subscriber.on_update(new_val.into()).await;
+                        match new_val {
+                            Some(result) => {
+                                subscriber.on_update(result).await;
+                            }
+                            None => {
+                                debug!("Client dropped prematurely");
+                                break;
+                            }
+                        }
                     }
                     _ = cancel_fut => {
                         break;
@@ -315,6 +385,41 @@ impl MobileConvexClient {
             .await
             .map_err(|e| e.into())
     }
+
+    /// Set an auth token fetcher callback for use when calling Convex
+    /// functions.
+    ///
+    /// The callback is invoked immediately (with `force_refresh=false`) and
+    /// again on every websocket reconnect (with `force_refresh=true`),
+    /// allowing dynamic token refresh.
+    ///
+    /// Pass `None` to clear the callback and log out.
+    #[frb]
+    pub async fn set_auth_callback(
+        &self,
+        fetcher: Option<DartAuthTokenFetcher>,
+    ) -> Result<(), ClientError> {
+        let fetcher = fetcher.map(|dart_fetcher| {
+            let fetcher = dart_fetcher.fetcher;
+            Box::new(move |force_refresh: bool| {
+                let fetcher = fetcher.clone();
+                Box::pin(async move { (fetcher)(force_refresh).await })
+                    as Pin<Box<dyn Future<Output = anyhow::Result<AuthenticationToken>> + Send>>
+            }) as AuthTokenFetcher
+        });
+        Ok(self.internal_set_auth_callback(fetcher).await?)
+    }
+
+    async fn internal_set_auth_callback(
+        &self,
+        fetcher: Option<AuthTokenFetcher>,
+    ) -> anyhow::Result<()> {
+        let mut client = self.connected_client().await?;
+        self.rt
+            .spawn(async move { client.set_auth_callback(fetcher).await })
+            .await
+            .map_err(|e| e.into())
+    }
 }
 
 /// Utility function to handle and serialize FunctionResult into a string or
@@ -327,6 +432,21 @@ fn handle_direct_function_result(result: FunctionResult) -> Result<Value, Client
     }
 }
 
+
+/// Initializes logging for [MobileConvexClient] and its dependencies.
+///
+/// Call this once early in your application's lifecycle.
+#[frb(sync)]
+pub fn init_convex_logging() {
+    use std::sync::Once;
+
+    static INIT: Once = Once::new();
+
+    INIT.call_once(|| {
+        logging::init_logging();
+        tracing::info!("convex_dart logging initialized");
+    });
+}
 
 // flutter_rust_bridge does not support BTreeMap, so we use these functions to convert the types.
 #[frb(sync)]

@@ -21,7 +21,7 @@ impl Value {
     ///
     /// # Example
     /// ```
-    /// use convex::Value;
+    /// use convex_dart::Value;
     /// use serde_json::{
     ///     json,
     ///     Value as JsonValue,

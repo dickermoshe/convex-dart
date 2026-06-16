@@ -1,3 +1,8 @@
+A unified fork of the [Convex Rust Client](https://github.com/get-convex/convex-rs) and [Convex Mobile](https://github.com/get-convex/convex-mobile)—the Rust core and mobile client in one crate, built for the Convex Dart/Flutter SDK.
+
+This is tracking commit `852046b` of the [Convex Rust Client](https://github.com/get-convex/convex-rs) and commit `720a79a` of the [Convex Mobile](https://github.com/get-convex/convex-mobile).
+
+---
 # Convex
 
 The official Rust client for [Convex](https://convex.dev/).

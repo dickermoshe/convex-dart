@@ -90,7 +90,7 @@ fn check_valid_identifier_inner<E>(
         Some('_') => (),
         Some(c) => {
             return Err(error(format_args!(
-                "Invalid first character '{c}' in {s}: Identifiers must start with an alphabetic \
+                "Invalid first character {c:?} in {s}: Identifiers must start with an alphabetic \
                  character or underscore"
             )))
         },
@@ -99,7 +99,7 @@ fn check_valid_identifier_inner<E>(
     for c in chars {
         if !c.is_ascii_alphanumeric() && c != '_' {
             return Err(error(format_args!(
-                "Identifier {s} has invalid character '{c}': Identifiers can only contain \
+                "Identifier {s} has invalid character {c:?}: Identifiers can only contain \
                  alphanumeric characters or underscores"
             )));
         }
@@ -128,33 +128,58 @@ pub const MAX_FIELD_NAME_LENGTH: usize = 1024;
 /// Field names cannot start with '$', must contain only non-control ASCII
 /// characters, and must be at most 1024 characters long.
 pub fn check_valid_field_name(s: &str) -> anyhow::Result<()> {
-    check_valid_field_name_inner(s).map_err(|e| anyhow::anyhow!(e))
+    if is_valid_field_name(s) {
+        return Ok(());
+    }
+    check_valid_field_name_slow(s)
 }
 
 pub fn is_valid_field_name(s: &str) -> bool {
-    check_valid_field_name_inner(s).is_ok()
+    if s.starts_with('$') {
+        return false;
+    }
+    if s.len() > MAX_FIELD_NAME_LENGTH {
+        return false;
+    }
+    // Ideally this should use slice::as_chunks, but MSRV is 1.85 and that method is
+    // only in 1.88
+    let mut chunks = s.as_bytes().chunks_exact(16);
+    for chunk in &mut chunks {
+        let chunk = <[u8; 16]>::try_from(chunk).unwrap();
+        // this strange construction convinces LLVM to vectorize the check
+        if chunk.map(|c| !c.is_ascii() || c.is_ascii_control()) != [false; 16] {
+            return false;
+        }
+    }
+    if chunks
+        .remainder()
+        .iter()
+        .any(|c| !c.is_ascii() || c.is_ascii_control())
+    {
+        return false;
+    }
+    true
 }
 
-fn check_valid_field_name_inner(s: &str) -> Result<(), String> {
+#[cold]
+fn check_valid_field_name_slow(s: &str) -> anyhow::Result<()> {
     if s.starts_with('$') {
-        return Err(format!(
-            "Field name {s} starts with '$', which is reserved."
-        ));
+        anyhow::bail!("Field name {s} starts with '$', which is reserved.");
     }
     for c in s.chars() {
         if !c.is_ascii() || c.is_ascii_control() {
-            return Err(format!(
-                "Field name {s} has invalid character '{c}': Field names can only contain \
+            anyhow::bail!(
+                "Field name {s} has invalid character {c:?}: Field names can only contain \
                  non-control ASCII characters"
-            ));
+            );
         }
     }
     if s.len() > MAX_FIELD_NAME_LENGTH {
-        return Err(format!(
+        anyhow::bail!(
             "Field name is too long ({} > maximum {})",
             s.len(),
             MAX_FIELD_NAME_LENGTH
-        ));
+        );
     }
     Ok(())
 }
@@ -170,7 +195,7 @@ pub mod arbitrary_regexes {
     pub const SYSTEM_IDENTIFIER_REGEX: &str = "_[a-zA-Z][a-zA-Z0-9_]{0,62}";
     // ' ' through ~ is all non-control ASCII. First character cannot be `$` or
     // `_`. These can be longer, but keep them shorter for the sake of tests.
-    pub const USER_FIELD_NAME_REGEX: &str = "[ -#%-^`-~][ -~]{0,63}";
+    pub const USER_FIELD_NAME_REGEX: &str = "([ -#%-^`-~][ -~]{0,63})?";
     // Technically this can be broader, but system fields are usually valid
     // identifiers
     pub const SYSTEM_FIELD_NAME_REGEX: &str = "_[a-zA-Z][a-zA-Z0-9_]{0,62}";
@@ -193,6 +218,9 @@ mod tests {
 
     use super::{
         arbitrary_regexes::IDENTIFIER_REGEX,
+        check_valid_field_name,
+        check_valid_identifier,
+        is_valid_field_name,
         MIN_IDENTIFIER,
     };
 
@@ -205,5 +233,59 @@ mod tests {
         fn test_min_identifier(ident in IDENTIFIER_REGEX) {
             assert!(MIN_IDENTIFIER <= &ident[..]);
         }
+
+        #[test]
+        fn test_field_name_fast_path(s in any::<String>()) {
+            assert_eq!(is_valid_field_name(&s), check_valid_field_name(&s).is_ok());
+        }
+    }
+
+    #[test]
+    fn test_control_char_in_identifier_body() {
+        let s = "abc\u{0010}def";
+        let err = check_valid_identifier(s).unwrap_err().to_string();
+        assert!(err.contains("'\\u{10}'"), "got: {err}");
+    }
+
+    #[test]
+    fn test_control_char_as_identifier_start() {
+        let s = "\u{0010}abc";
+        let err = check_valid_identifier(s).unwrap_err().to_string();
+        assert!(err.contains("'\\u{10}'"), "got: {err}");
+    }
+
+    #[test]
+    fn test_control_char_in_field_name() {
+        let s = "field\u{0010}name";
+        let err = check_valid_field_name(s).unwrap_err().to_string();
+        assert!(err.contains("'\\u{10}'"), "got: {err}");
+    }
+
+    #[test]
+    fn test_newline_in_identifier() {
+        let s = "abc\ndef";
+        let err = check_valid_identifier(s).unwrap_err().to_string();
+        assert!(err.contains("'\\n'"), "got: {err}");
+    }
+
+    #[test]
+    fn test_regular_char_in_identifier_body() {
+        let s = "abc@def";
+        let err = check_valid_identifier(s).unwrap_err().to_string();
+        assert!(err.contains("'@'"), "got: {err}");
+    }
+
+    #[test]
+    fn test_regular_char_as_identifier_start() {
+        let s = "9abc";
+        let err = check_valid_identifier(s).unwrap_err().to_string();
+        assert!(err.contains("'9'"), "got: {err}");
+    }
+
+    #[test]
+    fn test_emoji_in_field_name() {
+        let s = "field😀name";
+        let err = check_valid_field_name(s).unwrap_err().to_string();
+        assert!(err.contains("'😀'"), "got: {err}");
     }
 }

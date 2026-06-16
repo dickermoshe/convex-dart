@@ -3,7 +3,7 @@ use std::{
     env,
 };
 
-use convex::ConvexClient;
+use convex_dart::ConvexClient;
 
 #[tokio::main]
 async fn main() {

@@ -1,8 +1,8 @@
 [package]
 name = "convex_sync_types"
 description = "Sync types for the Convex Websocket protocol (convex.dev)"
-version = "0.10.2"
-authors = [ "Convex, Inc. <no-reply@convex.dev>" ]
+version = "0.10.4"
+authors = ["Convex, Inc. <no-reply@convex.dev>"]
 edition = "2021"
 rust-version = "1.80.1"
 resolver = "2"
@@ -11,22 +11,27 @@ repository = "https://github.com/get-convex/convex-rs"
 homepage = "https://www.convex.dev/"
 
 [features]
-testing = [ "proptest", "proptest-derive", "pretty_assertions" ]
+testing = ["proptest", "proptest-derive", "pretty_assertions"]
 
 [dependencies]
 anyhow = { version = "1" }
 base64 = { version = "0.13" }
 bytes = { version = "1.6.0" }
-derive_more = { version = "2", features = [ "full" ] }
+derive_more = { version = "2", features = ["full"] }
 headers = { version = "0.4" }
 pretty_assertions = { optional = true, version = "1" }
 proptest = { optional = true, version = "1" }
 proptest-derive = { optional = true, version = "0.5.0" }
 rand = { version = "0.9" }
-serde = { features = [ "derive" ], version = "1" }
-serde_json = { features = [ "float_roundtrip", "preserve_order", "raw_value" ], version = "1" }
-strum = { version = "0.27", features = [ "derive" ] }
-uuid = { features = [ "serde", "v4" ], version = "1.6" }
+serde = { features = ["derive"], version = "1" }
+serde_json = { features = [
+    "float_roundtrip",
+    "preserve_order",
+    "raw_value",
+], version = "1" }
+strum = { version = "0.27", features = ["derive"] }
+uuid = { features = ["serde", "v4"], version = "1.6" }
+flutter_rust_bridge = "=2.12.0"
 
 [dev-dependencies]
 pretty_assertions = { version = "1" }
