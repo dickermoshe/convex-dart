@@ -8,7 +8,8 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 // These functions are ignored because they are not marked as `pub`: `init_default_logging`
 
-/// Initialize platform-specific logging
-/// Should be called once
+/// Routes Rust client diagnostics to the platform log sink.
+///
+/// Android: Logcat (`ConvexMobile`). iOS: os_log. Desktop: stderr.
 Future<void> initLogging() =>
     RustLib.instance.api.crateDartLoggingInitLogging();

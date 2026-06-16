@@ -4,6 +4,7 @@ import 'package:convex_dart/src/convex_dart_for_generated_code.dart';
 import 'package:convex_dart/src/rust/base_client/query_result.dart';
 import 'package:convex_dart/src/rust/dart.dart';
 import 'package:convex_dart/src/rust/frb_generated.dart';
+import 'package:convex_dart/src/rust/sync.dart';
 import 'package:convex_dart/src/rust/value.dart';
 import 'package:locked_async/locked_async.dart';
 
@@ -33,26 +34,44 @@ class InternalConvexClient {
 
   /// Initializes the ConvexClient singleton instance.
   ///
-  /// [deploymentUrl] - The URL of your Convex deployment.
+  /// [deploymentUrl] is the URL of your Convex deployment.
   ///
-  /// Returns the singleton instance after initialization.
-  /// Will reuse existing instance if already initialized,
-  /// calling this method more than once will have no effect.
+  /// [logging] turns on diagnostic output from the native Rust client—WebSocket
+  /// reconnects, subscriptions, auth, and other SDK internals. This is not the
+  /// same as function logs in the Convex dashboard; those stay on the server.
+  /// When enabled, messages go to the platform log: Logcat on Android (tag
+  /// `ConvexMobile`), Xcode Console / os_log on iOS, and stderr on desktop.
+  /// [initConvexLogging] has the same effect and runs at most once.
+  ///
+  /// [onStateChange] is a callback that will be called when the WebSocket state changes.
+  ///
+  /// Returns the singleton instance. If already initialized, returns the
+  /// existing instance; later calls do not change [deploymentUrl].
   static Future<InternalConvexClient> init({
     required String deploymentUrl,
+    required bool logging,
+    FutureOr<void> Function(WebSocketState)? onStateChange,
   }) async {
     if (_instance == null) {
       // Initialize Rust FFI library
       await RustLib.init();
 
+      final webSocketStateSubscriber = onStateChange != null
+          ? DartWebSocketStateSubscriber(onStateChange: onStateChange)
+          : null;
+
       // Create new mobile client instance
       final client = MobileConvexClient(
         deploymentUrl: deploymentUrl,
         clientId: "convex-dart",
+        webSocketStateSubscriber: webSocketStateSubscriber,
       );
 
       // Create singleton instance
       _instance = InternalConvexClient._internal(client);
+    }
+    if (logging) {
+      initConvexLogging();
     }
     return _instance!;
   }
@@ -260,13 +279,18 @@ class InternalConvexClient {
   ///
   /// Pass [null] to clear the callback and log out.
   Future<void> setAuthCallback({
-    FutureOr<AuthenticationToken> Function(bool)? fetcher,
+    FutureOr<String> Function(bool)? fetcher,
   }) async {
     if (fetcher == null) {
       return await _client.setAuthCallback(fetcher: null);
     } else {
       return await _client.setAuthCallback(
-        fetcher: DartAuthTokenFetcher(fetcher: fetcher),
+        fetcher: DartAuthTokenFetcher(
+          fetcher: (n) async {
+            final result = await fetcher(n);
+            return AuthenticationToken.user(result);
+          },
+        ),
       );
     }
   }

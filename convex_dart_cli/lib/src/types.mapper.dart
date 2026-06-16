@@ -2,6 +2,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 // ignore_for_file: type=lint
+// ignore_for_file: invalid_use_of_protected_member
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
@@ -600,12 +601,6 @@ class FunctionSpecMapper extends SubClassMapperBase<FunctionSpec> {
     _$args,
     hook: EmptyObjectToAnyHook(),
   );
-  static JsType _$returns(FunctionSpec v) => v.returns;
-  static const Field<FunctionSpec, JsType> _f$returns = Field(
-    'returns',
-    _$returns,
-    hook: EmptyObjectToAnyHook(),
-  );
   static String _$identifier(FunctionSpec v) => v.identifier;
   static const Field<FunctionSpec, String> _f$identifier = Field(
     'identifier',
@@ -621,50 +616,22 @@ class FunctionSpecMapper extends SubClassMapperBase<FunctionSpec> {
     'functionType',
     _$functionType,
   );
-  static List<String> _$pathParts(FunctionSpec v) => v.pathParts;
-  static const Field<FunctionSpec, List<String>> _f$pathParts = Field(
-    'pathParts',
-    _$pathParts,
-    mode: FieldMode.member,
-  );
-  static String _$functionName(FunctionSpec v) => v.functionName;
-  static const Field<FunctionSpec, String> _f$functionName = Field(
-    'functionName',
-    _$functionName,
-    mode: FieldMode.member,
-  );
-  static String _$convexFunctionIdentifier(FunctionSpec v) =>
-      v.convexFunctionIdentifier;
-  static const Field<FunctionSpec, String> _f$convexFunctionIdentifier = Field(
-    'convexFunctionIdentifier',
-    _$convexFunctionIdentifier,
-    mode: FieldMode.member,
-  );
-  static String? _$argsTypeName(FunctionSpec v) => v.argsTypeName;
-  static const Field<FunctionSpec, String> _f$argsTypeName = Field(
-    'argsTypeName',
-    _$argsTypeName,
-    mode: FieldMode.member,
-  );
-  static String _$returnsTypeName(FunctionSpec v) => v.returnsTypeName;
-  static const Field<FunctionSpec, String> _f$returnsTypeName = Field(
-    'returnsTypeName',
-    _$returnsTypeName,
-    mode: FieldMode.member,
+  static JsType _$returns(FunctionSpec v) => v.returns;
+  static const Field<FunctionSpec, JsType> _f$returns = Field(
+    'returns',
+    _$returns,
+    opt: true,
+    def: const JsAny("any"),
+    hook: EmptyObjectToAnyHook(),
   );
 
   @override
   final MappableFields<FunctionSpec> fields = const {
     #args: _f$args,
-    #returns: _f$returns,
     #identifier: _f$identifier,
     #visibility: _f$visibility,
     #functionType: _f$functionType,
-    #pathParts: _f$pathParts,
-    #functionName: _f$functionName,
-    #convexFunctionIdentifier: _f$convexFunctionIdentifier,
-    #argsTypeName: _f$argsTypeName,
-    #returnsTypeName: _f$returnsTypeName,
+    #returns: _f$returns,
   };
 
   @override
@@ -678,10 +645,10 @@ class FunctionSpecMapper extends SubClassMapperBase<FunctionSpec> {
   static FunctionSpec _instantiate(DecodingData data) {
     return FunctionSpec(
       data.dec(_f$args),
-      data.dec(_f$returns),
       data.dec(_f$identifier),
       data.dec(_f$visibility),
       data.dec(_f$functionType),
+      data.dec(_f$returns),
     );
   }
 
@@ -748,15 +715,15 @@ extension FunctionSpecValueCopy<$R, $Out>
 abstract class FunctionSpecCopyWith<$R, $In extends FunctionSpec, $Out>
     implements BaseFunctionSpecCopyWith<$R, $In, $Out> {
   JsTypeCopyWith<$R, JsType, JsType> get args;
-  JsTypeCopyWith<$R, JsType, JsType> get returns;
   VisibilityCopyWith<$R, Visibility, Visibility> get visibility;
+  JsTypeCopyWith<$R, JsType, JsType> get returns;
   @override
   $R call({
     JsType? args,
-    JsType? returns,
     String? identifier,
     Visibility? visibility,
     String? functionType,
+    JsType? returns,
   });
   FunctionSpecCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
@@ -773,34 +740,34 @@ class _FunctionSpecCopyWithImpl<$R, $Out>
   JsTypeCopyWith<$R, JsType, JsType> get args =>
       $value.args.copyWith.$chain((v) => call(args: v));
   @override
-  JsTypeCopyWith<$R, JsType, JsType> get returns =>
-      $value.returns.copyWith.$chain((v) => call(returns: v));
-  @override
   VisibilityCopyWith<$R, Visibility, Visibility> get visibility =>
       $value.visibility.copyWith.$chain((v) => call(visibility: v));
   @override
+  JsTypeCopyWith<$R, JsType, JsType> get returns =>
+      $value.returns.copyWith.$chain((v) => call(returns: v));
+  @override
   $R call({
     JsType? args,
-    JsType? returns,
     String? identifier,
     Visibility? visibility,
     String? functionType,
+    JsType? returns,
   }) => $apply(
     FieldCopyWithData({
       if (args != null) #args: args,
-      if (returns != null) #returns: returns,
       if (identifier != null) #identifier: identifier,
       if (visibility != null) #visibility: visibility,
       if (functionType != null) #functionType: functionType,
+      if (returns != null) #returns: returns,
     }),
   );
   @override
   FunctionSpec $make(CopyWithData data) => FunctionSpec(
     data.get(#args, or: $value.args),
-    data.get(#returns, or: $value.returns),
     data.get(#identifier, or: $value.identifier),
     data.get(#visibility, or: $value.visibility),
     data.get(#functionType, or: $value.functionType),
+    data.get(#returns, or: $value.returns),
   );
 
   @override
@@ -1792,25 +1759,11 @@ class JsLiteralMapper extends SubClassMapperBase<JsLiteral> {
   static const Field<JsLiteral, dynamic> _f$value = Field('value', _$value);
   static String _$type(JsLiteral v) => v.type;
   static const Field<JsLiteral, String> _f$type = Field('type', _$type);
-  static String _$literalTypeName(JsLiteral v) => v.literalTypeName;
-  static const Field<JsLiteral, String> _f$literalTypeName = Field(
-    'literalTypeName',
-    _$literalTypeName,
-    mode: FieldMode.member,
-  );
-  static dynamic _$literalValueCode(JsLiteral v) => v.literalValueCode;
-  static const Field<JsLiteral, dynamic> _f$literalValueCode = Field(
-    'literalValueCode',
-    _$literalValueCode,
-    mode: FieldMode.member,
-  );
 
   @override
   final MappableFields<JsLiteral> fields = const {
     #value: _f$value,
     #type: _f$type,
-    #literalTypeName: _f$literalTypeName,
-    #literalValueCode: _f$literalValueCode,
   };
 
   @override
@@ -1935,18 +1888,11 @@ class JsUnionMapper extends SubClassMapperBase<JsUnion> {
   static const Field<JsUnion, List<JsType>> _f$value = Field('value', _$value);
   static String _$type(JsUnion v) => v.type;
   static const Field<JsUnion, String> _f$type = Field('type', _$type);
-  static bool _$isRealUnion(JsUnion v) => v.isRealUnion;
-  static const Field<JsUnion, bool> _f$isRealUnion = Field(
-    'isRealUnion',
-    _$isRealUnion,
-    mode: FieldMode.member,
-  );
 
   @override
   final MappableFields<JsUnion> fields = const {
     #value: _f$value,
     #type: _f$type,
-    #isRealUnion: _f$isRealUnion,
   };
 
   @override
@@ -2220,20 +2166,11 @@ class JsObjectMapper extends SubClassMapperBase<JsObject> {
   );
   static String _$type(JsObject v) => v.type;
   static const Field<JsObject, String> _f$type = Field('type', _$type);
-  static Iterable<MapEntry<String, JsField>> _$optionalFields(JsObject v) =>
-      v.optionalFields;
-  static const Field<JsObject, Iterable<MapEntry<String, JsField>>>
-  _f$optionalFields = Field(
-    'optionalFields',
-    _$optionalFields,
-    mode: FieldMode.member,
-  );
 
   @override
   final MappableFields<JsObject> fields = const {
     #value: _f$value,
     #type: _f$type,
-    #optionalFields: _f$optionalFields,
   };
 
   @override
@@ -2497,18 +2434,11 @@ class ConvexIdMapper extends SubClassMapperBase<ConvexId> {
   );
   static String _$type(ConvexId v) => v.type;
   static const Field<ConvexId, String> _f$type = Field('type', _$type);
-  static String _$typeName(ConvexId v) => v.typeName;
-  static const Field<ConvexId, String> _f$typeName = Field(
-    'typeName',
-    _$typeName,
-    mode: FieldMode.member,
-  );
 
   @override
   final MappableFields<ConvexId> fields = const {
     #tableName: _f$tableName,
     #type: _f$type,
-    #typeName: _f$typeName,
   };
 
   @override

@@ -31,15 +31,15 @@ BTreeMapStringValue serialize(Query127Args args) {
     hashmap: {
       'i': encodeValue({
         'variables': encodeValue({
-          for (final on449555 in args.i.variables.entries)
-            on449555.key: encodeValue(
+          for (final on323843 in args.i.variables.entries)
+            on323843.key: encodeValue(
               encodeValue(
-                on449555.value.split(
-                  (on66070) => encodeValue(on66070),
-                  (on394918) => encodeValue(on394918),
-                  (on185925) => encodeValue(on185925),
-                  (on804461) => encodeValue(
-                    on804461.map((on985011) => encodeValue(on985011)).toIList(),
+                on323843.value.split(
+                  (on464942) => encodeValue(on464942),
+                  (on705241) => encodeValue(on705241),
+                  (on824353) => encodeValue(on824353),
+                  (on141974) => encodeValue(
+                    on141974.map((on688121) => encodeValue(on688121)).toIList(),
                   ),
                 ),
               ),
@@ -53,33 +53,33 @@ BTreeMapStringValue serialize(Query127Args args) {
 @pragma("vm:prefer-inline")
 Query127Response deserialize(Value map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
-    (on977490) => (
-      i: (on977490['i'] as IMap<String, dynamic>).then(
-        (on424988) => (
-          variables: (on424988['variables'] as IMap<String, dynamic>).map(
-            (on687729, on510613) => MapEntry(
-              on687729,
+    (on824457) => (
+      i: (on824457['i'] as IMap<String, dynamic>).then(
+        (on155156) => (
+          variables: (on155156['variables'] as IMap<String, dynamic>).map(
+            (on817090, on844485) => MapEntry(
+              on817090,
               Union4<String, double, bool, IList<dynamic>>(() {
                 try {
-                  return (on510613 as String);
+                  return (on844485 as String);
                 } catch (e) {}
 
                 try {
-                  return (on510613 as double);
+                  return (on844485 as double);
                 } catch (e) {}
 
                 try {
-                  return (on510613 as bool);
+                  return (on844485 as bool);
                 } catch (e) {}
 
                 try {
-                  return (on510613 as IList<dynamic>)
-                      .map((on938734) => (on938734 as dynamic))
+                  return (on844485 as IList<dynamic>)
+                      .map((on393648) => (on393648 as dynamic))
                       .toIList();
                 } catch (e) {}
 
                 throw Exception(
-                  (on510613.toString() ?? "null") +
+                  (on844485.toString() ?? "null") +
                       r" cannot be deserialized into a Union4<String, double, bool, IList<dynamic>>",
                 );
               }()),

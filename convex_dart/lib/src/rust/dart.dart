@@ -15,9 +15,12 @@ part 'dart.freezed.dart';
 // These functions are ignored because they are not marked as `pub`: `connected_client`, `handle_direct_function_result`, `internal_action`, `internal_mutation`, `internal_set_auth_callback`, `internal_set_auth`, `internal_subscribe`, `new`
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`, `fmt`, `from`
 
-/// Initializes logging for [MobileConvexClient] and its dependencies.
+/// Initializes client-side diagnostic logging for [MobileConvexClient].
 ///
-/// Call this once early in your application's lifecycle.
+/// Emits Rust SDK internals (WebSocket, subscriptions, auth)—not Convex
+/// backend function logs from the dashboard. Output goes to Logcat on Android,
+/// os_log on iOS, and stderr on desktop. Safe to call more than once; runs at
+/// most once.
 void initConvexLogging() => RustLib.instance.api.crateDartInitConvexLogging();
 
 BTreeMapStringValue hashmapToBtreemap({required Map<String, Value> hashmap}) =>

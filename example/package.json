@@ -10,6 +10,6 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "convex": "^1.26.2"
+    "convex": "^1.41.0"
   }
 }

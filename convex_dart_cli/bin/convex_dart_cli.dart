@@ -7,15 +7,57 @@ import 'package:convex_dart_cli/src/types.dart';
 import 'package:cli_tools/cli_tools.dart';
 import 'package:locked_async/locked_async.dart';
 
-Future<int> main(List<String> args) async {
-  final commandRunner = BetterCommandRunner(
-    'convex_dart_cli',
-    'CLI for generating Dart Convex Client',
-    globalOptions: [StandardGlobalOption.quiet, StandardGlobalOption.verbose],
-  );
-  commandRunner.addCommand(GenerateCommand(commandRunner));
+Process? devProcess;
+StreamSubscription<ProcessSignal>? _sigintSubscription;
 
-  await commandRunner.run(args);
+Future<void> killDevServer() async {
+  final p = devProcess;
+  if (p == null) return;
+
+  if (Platform.isWindows) {
+    await Process.run('taskkill', ['/PID', '${p.pid}', '/T', '/F']);
+  } else {
+    p.kill(ProcessSignal.sigterm);
+  }
+
+  try {
+    await p.exitCode.timeout(
+      const Duration(seconds: 5),
+      onTimeout: () {
+        p.kill(ProcessSignal.sigkill);
+        return -1;
+      },
+    );
+  } finally {
+    if (identical(devProcess, p)) {
+      devProcess = null;
+    }
+  }
+}
+
+Future<int> main(List<String> args) async {
+  // Listen for `ctrl+c` to shutdown the `convex dev` process
+  // if it is still running
+  _sigintSubscription = ProcessSignal.sigint.watch().listen((_) async {
+    print("Received `ctrl+c`, shutting down...");
+    await _sigintSubscription?.cancel();
+    await killDevServer();
+    exit(130);
+  });
+
+  try {
+    final commandRunner = BetterCommandRunner(
+      'convex_dart_cli',
+      'CLI for generating Dart Convex Client',
+      globalOptions: [StandardGlobalOption.quiet, StandardGlobalOption.verbose],
+    );
+    commandRunner.addCommand(GenerateCommand(commandRunner));
+    await commandRunner.run(args);
+  } finally {
+    // Kill the `convex dev` process if it is still running
+    await killDevServer();
+    await _sigintSubscription?.cancel();
+  }
   return 0;
 }
 
@@ -197,8 +239,7 @@ class GenerateCommand extends BetterCommand<CliOptions, void> {
       );
       logger.info(
         "Dart client generated successfully! "
-        "Monitoring for changes and will regenerate automatically when needed. "
-        "Press 'r' to force regeneration.",
+        "Monitoring for changes and will regenerate automatically when needed.",
         type: TextLogType.success,
       );
     });
@@ -257,92 +298,85 @@ class GenerateCommand extends BetterCommand<CliOptions, void> {
 
   @override
   Future<void> runWithConfig(Configuration<CliOptions> config) async {
-    // Listen for 'r' key to manually trigger generation
-    stdin.echoMode = false;
-    stdin.lineMode = false;
-    stdin.listen((List<int> data) {
-      String input = String.fromCharCodes(data).toLowerCase();
-      if (input == 'r') {
-        buildDartClient(config);
-      }
-    });
-    if (config.value(CliOptions.prod)) {
-      logger.info("Generating Dart client in production mode...");
-      buildDartClient(config);
-      return;
-    }
-
-    // Run convex dev command in the background
-    final workingDirectory = config.value(CliOptions.jsRoot);
-    final (command, args) = _buildConvexDevCommand(config);
-    final devCommand = "$command ${args.join(" ")}";
-
-    logger.info(
-      "Starting Convex development server...",
-      type: TextLogType.init,
-    );
-    logger.info(
-      "Configuration:\n"
-      "  Command: $devCommand\n"
-      "  Working Directory: ${workingDirectory.path}\n"
-      "  JS Package Manager: ${config.value(CliOptions.jsPackageManager).name}\n"
-      "  Production Mode: ${config.value(CliOptions.prod)}",
-    );
-
-    final Process devProcess;
     try {
-      devProcess = await Process.start(
-        command,
-        args,
-        runInShell: true,
-        workingDirectory: workingDirectory.path,
-      );
+      if (config.value(CliOptions.prod)) {
+        logger.info("Generating Dart client in production mode...");
+        buildDartClient(config);
+        return;
+      }
+
+      // Run convex dev command in the background
+      final workingDirectory = config.value(CliOptions.jsRoot);
+      final (command, args) = _buildConvexDevCommand(config);
+      final devCommand = "$command ${args.join(" ")}";
 
       logger.info(
-        "Convex dev process started successfully (PID: ${devProcess.pid})",
-        type: TextLogType.success,
+        "Starting Convex development server...",
+        type: TextLogType.init,
       );
-    } catch (e, stackTrace) {
-      logger.error(
-        "Failed to start convex dev process",
-        stackTrace: stackTrace,
-      );
-      logger.error("Error details: $e", stackTrace: stackTrace);
       logger.info(
-        "Troubleshooting:\n"
-        "  1. Ensure the JS package manager (${config.value(CliOptions.jsPackageManager).name}) is installed\n"
-        "  2. Verify convex is installed in your project\n"
-        "  3. Check that you're in the correct directory",
+        "Configuration:\n"
+        "  Command: $devCommand\n"
+        "  Working Directory: ${workingDirectory.path}\n"
+        "  JS Package Manager: ${config.value(CliOptions.jsPackageManager).name}\n"
+        "  Production Mode: ${config.value(CliOptions.prod)}",
       );
-      return;
-    }
-    // Log stdout and stderr of convex dev command
-    devProcess.stdout.transform(utf8.decoder).transform(LineSplitter()).listen((
-      event,
-    ) {
-      logger.info("convex dev stdout: $event");
-      if (event.contains("Convex functions ready")) {
-        buildDartClient(config);
-      }
-    });
-    devProcess.stderr.transform(utf8.decoder).transform(LineSplitter()).listen((
-      event,
-    ) {
-      logger.info("convex dev stderr: $event");
-      if (event.contains("Convex functions ready")) {
-        buildDartClient(config);
-      }
-    });
 
-    // Wait for the process to exit
-    while (true) {
       try {
-        await devProcess.exitCode.timeout(const Duration(milliseconds: 100));
-        break;
-        // ignore: empty_catches
-      } catch (e) {}
+        devProcess = await Process.start(
+          command,
+          args,
+          workingDirectory: workingDirectory.path,
+          runInShell: true,
+        );
+
+        logger.info(
+          "Convex dev process started successfully (PID: ${devProcess!.pid})",
+          type: TextLogType.success,
+        );
+      } catch (e, stackTrace) {
+        logger.error(
+          "Failed to start convex dev process",
+          stackTrace: stackTrace,
+        );
+        logger.error("Error details: $e", stackTrace: stackTrace);
+        logger.info(
+          "Troubleshooting:\n"
+          "  1. Ensure the JS package manager (${config.value(CliOptions.jsPackageManager).name}) is installed\n"
+          "  2. Verify convex is installed in your project\n"
+          "  3. Check that you're in the correct directory",
+        );
+        return;
+      }
+      // Log stdout and stderr of convex dev command
+      devProcess!.stdout
+          .transform(utf8.decoder)
+          .transform(LineSplitter())
+          .listen((event) {
+            logger.info("convex dev stdout: $event");
+            if (event.contains("Convex functions ready")) {
+              buildDartClient(config);
+            }
+          });
+      devProcess!.stderr
+          .transform(utf8.decoder)
+          .transform(LineSplitter())
+          .listen((event) {
+            logger.info("convex dev stderr: $event");
+            if (event.contains("Convex functions ready")) {
+              buildDartClient(config);
+            }
+          });
+
+      // Wait for the process to exit
+      final exitCode = await devProcess!.exitCode;
+      devProcess = null;
+      logger.info("Convex dev process exited with code $exitCode, exiting...");
+    } finally {
+      if (devProcess != null) {
+        await killDevServer();
+      }
     }
-    logger.info("Convex dev process exited, exiting...");
   }
 }
 

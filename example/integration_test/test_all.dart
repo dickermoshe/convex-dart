@@ -10,7 +10,7 @@ import 'auth_test.dart' as auth_test;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   setUpAll(() async {
-    await ConvexClient.init();
+    await ConvexClient.init(logging: true, onStateChange: (state) {});
   });
   // primitive_test.main();
   // serialization_test.main();

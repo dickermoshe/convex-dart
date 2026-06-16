@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
-  await ConvexClient.init();
+  await ConvexClient.init(
+    logging: true,
+    onStateChange: (state) {
+      print('WebSocket state changed: $state');
+    },
+  );
   runApp(const MyApp());
 }
 

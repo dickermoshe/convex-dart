@@ -148,6 +148,7 @@ class FunctionsSpec with FunctionsSpecMappable {
 // ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter, invalid_use_of_internal_member
 import "dart:typed_data";
+import 'dart:async';
 import "package:convex_dart/src/convex_dart_for_generated_code.dart";
 """);
     for (final tableName in context.tables) {
@@ -223,13 +224,54 @@ import 'package:http/http.dart' as \$http;
 import 'dart:convert' as \$convert;
 ${builtFunctionSpecs.map((spec) => "import '${spec.importPath}' as ${spec.prefix} show ${spec.functionNames.join(",")};").join("\n")}
 class ConvexClient {
-  static Future<void> init() async {
+  /// Initializes the ConvexClient singleton instance. Calling this method more than once will have no effect.
+  /// 
+  /// [logging] turns on diagnostic output from the native Rust client—WebSocket
+  /// reconnects, subscriptions, auth, and other SDK internals. This is not the
+  /// same as function logs in the Convex dashboard; those stay on the server.
+  /// When enabled, messages go to the platform log: Logcat on Android (tag
+  /// `ConvexMobile`), Xcode Console / os_log on iOS, and stderr on desktop.
+  /// 
+  /// [onStateChange] is a callback that will be called when the WebSocket state changes.
+  static Future<void> init({required bool logging, FutureOr<void> Function(internal.WebSocketState)? onStateChange}) async {
     await internal.InternalConvexClient.init(
       deploymentUrl: "$url",
+      logging: logging,
+      onStateChange: onStateChange,
     );
   }
+
+  /// Set auth for use when calling Convex functions.
+  ///
+  /// Set it with a token that you get from your auth provider via their login
+  /// flow. If `None` is passed as the token, then auth is unset (logging
+  /// out).
+  ///
+  /// Internally this wraps the static token in a trivial callback and the
+  /// same token is re-sent on websocket reconnect.
+  ///
+  /// Prefer [setAuthCallback] - it will allow fetching a
+  /// fresh token after a websocket reconnect. That's important because
+  /// the original token might have expired while the socket was
+  /// disconnected.
   Future<void> setAuth({required String? token}) async {
     await internal.InternalConvexClient.instance.setAuth(token: token);
+  }
+
+  /// Set an auth token fetcher callback for use when calling Convex
+  /// functions.
+  ///
+  /// The callback is invoked immediately (with `force_refresh=false`) and
+  /// again on every websocket reconnect (with `force_refresh=true`),
+  /// allowing dynamic token refresh.
+  ///
+  /// Pass [null] to clear the callback and log out.
+  Future<void> setAuthCallback({
+    required FutureOr<String> Function(bool)? fetcher,
+  }) async {
+    await internal.InternalConvexClient.instance.setAuthCallback(
+      fetcher: fetcher,
+    );
   }
 
   static final String httpUrl = "${url.replaceAll(RegExp(r'\.cloud$'), '.site')}";
@@ -313,6 +355,9 @@ class EmptyObjectToAnyHook extends MappingHook {
   const EmptyObjectToAnyHook();
   @override
   dynamic afterDecode(dynamic value) {
+    if (value == null) {
+      return JsAny("any");
+    }
     if (value is JsObject && value.value.isEmpty) {
       return JsAny("any");
     }
@@ -418,11 +463,11 @@ class FunctionSpec extends BaseFunctionSpec with FunctionSpecMappable {
 
   const FunctionSpec(
     this.args,
-    this.returns,
     this.identifier,
     this.visibility,
-    super.functionType,
-  );
+    super.functionType, [
+    this.returns = const JsAny("any"),
+  ]);
 
   static bool checkType(dynamic value) {
     return value is Map && value['functionType'] != 'HttpAction';

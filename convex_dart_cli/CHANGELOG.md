@@ -1,3 +1,8 @@
+## 0.6.0-dev.4
+
+- Add `onStateChange` parameter and `logging` parameter to `init` method
+- Add `WebSocketState` enum
+
 ## 0.6.0-dev.3
 
 - Camel case the generated Dart keys

@@ -15,6 +15,7 @@ export './rust/value.dart' show Value;
 export './rust/dart.dart' show hashmapToBtreemap, btreemapToHashmap;
 export 'rust/value.dart' show Value_Object;
 export 'bytes.dart' show Uint8ListWithEquality;
+export 'package:convex_dart/src/rust/sync.dart' show WebSocketState;
 
 extension Then<T> on T {
   R then<R>(R Function(T) then) {

@@ -46,20 +46,20 @@ BTreeMapStringValue serialize(Query129Args args) {
 @pragma("vm:prefer-inline")
 Query129Response deserialize(Value map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
-    (on5196) => (
-      i: (on5196['i'] as IMap<String, dynamic>).then(
-        (on466085) => (
-          error: on466085.containsKey('error')
+    (on977214) => (
+      i: (on977214['i'] as IMap<String, dynamic>).then(
+        (on723035) => (
+          error: on723035.containsKey('error')
               ? Defined<
                   ({String handler, ({double count, double delay}) retry})
                 >(
-                  (on466085['error'] as IMap<String, dynamic>).then(
-                    (on320259) => (
-                      handler: (on320259['handler'] as String),
-                      retry: (on320259['retry'] as IMap<String, dynamic>).then(
-                        (on637507) => (
-                          count: (on637507['count'] as double),
-                          delay: (on637507['delay'] as double),
+                  (on723035['error'] as IMap<String, dynamic>).then(
+                    (on983413) => (
+                      handler: (on983413['handler'] as String),
+                      retry: (on983413['retry'] as IMap<String, dynamic>).then(
+                        (on848260) => (
+                          count: (on848260['count'] as double),
+                          delay: (on848260['delay'] as double),
                         ),
                       ),
                     ),

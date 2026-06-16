@@ -65,7 +65,7 @@ example/
    ```
 
 3. **Run the tests:**
-    Build the shared library in `convex_dart/rust`.
+    Build the shared library in `convex_dart/rust` and run the tests.
 
    ```bash
    flutter test integration_test/test_all.dart 

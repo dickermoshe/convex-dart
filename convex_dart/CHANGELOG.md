@@ -1,3 +1,8 @@
+## 0.6.0-dev.4
+
+- Add `onStateChange` parameter to `init` method
+- Add `WebSocketState` enum
+
 ## 0.6.0-dev.2
 
 - Update Rust client to 0.10.2

@@ -31,11 +31,11 @@ BTreeMapStringValue serialize(Query178Args args) {
     hashmap: {
       'i': encodeValue(
         args.i.split(
-          (on627965) => encodeValue(
-            on627965.map((on182351) => encodeValue(on182351)).toIList(),
+          (on604764) => encodeValue(
+            on604764.map((on309413) => encodeValue(on309413)).toIList(),
           ),
-          (on647847) => encodeValue(
-            on647847.map((on206795) => encodeValue(on206795)).toIList(),
+          (on984511) => encodeValue(
+            on984511.map((on125241) => encodeValue(on125241)).toIList(),
           ),
         ),
       ),
@@ -46,22 +46,22 @@ BTreeMapStringValue serialize(Query178Args args) {
 @pragma("vm:prefer-inline")
 Query178Response deserialize(Value map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
-    (on19457) => (
+    (on767403) => (
       i: Union2<IList<String>, IList<double>>(() {
         try {
-          return (on19457['i'] as IList<dynamic>)
-              .map((on425981) => (on425981 as String))
+          return (on767403['i'] as IList<dynamic>)
+              .map((on567904) => (on567904 as String))
               .toIList();
         } catch (e) {}
 
         try {
-          return (on19457['i'] as IList<dynamic>)
-              .map((on889686) => (on889686 as double))
+          return (on767403['i'] as IList<dynamic>)
+              .map((on894510) => (on894510 as double))
               .toIList();
         } catch (e) {}
 
         throw Exception(
-          (on19457['i'].toString() ?? "null") +
+          (on767403['i'].toString() ?? "null") +
               r" cannot be deserialized into a Union2<IList<String>, IList<double>>",
         );
       }()),
