@@ -1,83 +1,94 @@
 [package]
 name = "convex_dart"
 description = "Client library for Convex (convex.dev)"
-authors = ["Convex, Inc. <no-reply@convex.dev>"]
-version = "0.10.2"
+authors = [ "Convex, Inc. <no-reply@convex.dev>" ]
+version = "0.10.4"
 edition = "2021"
-rust-version = "1.80.1"
+rust-version = "1.85"
 resolver = "2"
 license = "Apache-2.0"
 repository = "https://github.com/get-convex/convex-rs"
 homepage = "https://www.convex.dev/"
 
 [lib]
-crate-type = ["cdylib", "staticlib"]
+crate-type = ["rlib", "cdylib", "staticlib"]
 
 [features]
-default = ["rustls-tls-webpki-roots"]
-native-tls = ["tokio-tungstenite/native-tls"]
-native-tls-vendored = ["tokio-tungstenite/native-tls-vendored"]
-rustls-tls-native-roots = ["tokio-tungstenite/rustls-tls-native-roots"]
-rustls-tls-webpki-roots = ["tokio-tungstenite/rustls-tls-webpki-roots"]
-testing = [
+# Convex Mobile overrides the convex-rs default feature to use rustls-tls-webpki-roots
+# default = [ "native-tls-vendored" ]
+default = [ "rustls-tls-webpki-roots" ]
+
+# Convex Rust Client Features
+native-tls = [ "tokio-tungstenite/native-tls" ]
+native-tls-vendored = [ "tokio-tungstenite/native-tls-vendored" ]
+rustls-tls-native-roots = [ "tokio-tungstenite/rustls-tls-native-roots" ]
+rustls-tls-webpki-roots = [ "tokio-tungstenite/rustls-tls-webpki-roots" ]
+testing = [ 
     "convex_sync_types/testing",
     "proptest",
     "proptest-derive",
-    # "parking_lot", No longer an optional dependency
+    # "parking_lot", No longer an optional dependency in Convex Mobile
 ]
+# Convex Mobile Features
+max_level_off = ["tracing/max_level_off"]
+max_level_error = ["tracing/max_level_error"]
+max_level_warn = ["tracing/max_level_warn"]
 
 [dependencies]
 anyhow = { version = "1" }
 async-trait = { version = "0.1" }
 base64 = { version = "0.13" }
 bytes = { version = "1.6.0" }
-convex_sync_types = { path = "./sync_types", version = "=0.10.2" }
+convex_sync_types = { path = "./sync_types", version = "=0.10.4" }
 futures = { version = "0.3" }
-imbl = { version = "5.0.0" }
-
-# Replaced by version in [convex-mobile]
-# parking_lot = { optional = true, version = "0.12", features = [ "hardware-lock-elision" ] }
+imbl = { version = "7.0.0" }
+# Overridden by Convex Mobile dependencies
+# parking_lot = { optional = true, version = "0.12", features = [ "hardware-lock-elision" ] } 
 proptest = { optional = true, version = "1" }
 proptest-derive = { optional = true, version = "0.5.0" }
 rand = { version = "0.9" }
-serde_json = { features = [
-    "float_roundtrip",
-    "preserve_order",
-    "raw_value",
-], version = "1" }
+serde_json = { features = [ "float_roundtrip", "preserve_order", "raw_value" ], version = "1" }
 thiserror = { version = "2" }
-tokio = { features = ["full"], version = "1.47.1" }
-tokio-stream = { features = ["io-util", "sync"], version = "0.1" }
-tokio-tungstenite = { features = ["url"], version = "0.26.2" }
+tokio = { features = [ "full" ], version = "1.47.1" }
+tokio-stream = { features = [ "io-util", "sync" ], version = "0.1" }
+tokio-tungstenite = { features = [ "url" ], version = "0.28.0" }
 tracing = { version = "0.1" }
 url = { version = "2.5.4" }
-uuid = { features = ["serde", "v4"], version = "1.6" }
+uuid = { features = [ "serde", "v4" ], version = "1.6" }
 
-# The following dependencies are added for dart support
-flutter_rust_bridge = "=2.11.1"
-log = { version = "0.4.21" }
+# Convex Mobile dependencies
+rustls = { version = "0.23", features = ["aws-lc-rs"] }
+aws-lc-rs = { version = "1.14", features = ["bindgen"], optional = true }
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 once_cell = { version = "1.19.0" }
+parking_lot = { version = "0.12.3" }
 async-once-cell = { version = "0.5.3" }
-ordered-float = "5.0.0"
-parking_lot = { version = "0.12.3", features = ["hardware-lock-elision"] }
-rustls = { version = "0.23", default-features = false, features = [
-    "ring",
-    "std",
-    "tls12",
-] }
+android_logger = { version = "0.14.1" }
+log = { version = "0.4.21" }
+flutter_rust_bridge = { version = "2.12.0" }
+
 
 [dev-dependencies]
 colored = { version = "3" }
-convex_sync_types = { path = "./sync_types", version = "=0.10.2", features = [
-    "testing",
-] }
+convex_sync_types = { path = "./sync_types", version = "=0.10.4", features = [ "testing" ] }
 dotenvy = { version = "0.15.7" }
 maplit = { version = "1" }
-parking_lot = { version = "0.12", features = ["hardware-lock-elision"] }
+parking_lot = { version = "0.12", features = [ "hardware-lock-elision" ] }
 pretty_assertions = { version = "1" }
 proptest = { version = "1" }
 proptest-derive = { version = "0.5.0" }
-tracing-subscriber = { features = ["env-filter"], version = "0.3.17" }
+tracing-subscriber = { features = [ "env-filter" ], version = "0.3.17" }
+
+[target.'cfg(target_os = "android")'.dependencies]
+tracing-android = "0.2"
+android_logger = "0.14"
+
+[target.'cfg(target_os = "ios")'.dependencies]
+tracing-oslog = "0.3"
+oslog = "0.2"
+
+[profile.release]
+features = ["max_level_warn"] 
 
 [lints.rust]
 unused_extern_crates = "warn"

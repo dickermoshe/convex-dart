@@ -13,7 +13,7 @@
 //! mutations. To make a new project, check out our [getting started guide](https://docs.convex.dev/get-started).
 //!
 //! ```no_run
-//! use convex::ConvexClient;
+//! use convex_dart::ConvexClient;
 //! use futures::StreamExt;
 //!
 //! #[tokio::main]
@@ -58,15 +58,19 @@ pub use client::{
     ConvexClient,
     ConvexClientBuilder,
 };
+#[cfg(any(test, feature = "testing"))]
+pub use sync::testing;
 pub use sync::WebSocketState;
 
 pub mod base_client;
 #[doc(inline)]
 pub use base_client::{
+    AuthTokenFetcher,
     FunctionResult,
     QueryResults,
     SubscriberId,
 };
+pub use convex_sync_types::AuthenticationToken;
 
 pub mod dart;
 mod sync;

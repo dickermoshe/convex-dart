@@ -3,12 +3,13 @@ use convex_sync_types::{
     ClientMessage,
     Timestamp,
 };
+use flutter_rust_bridge::frb;
 use tokio::sync::mpsc;
 use url::Url;
 
 use crate::value::Value;
 
-#[cfg(test)]
+#[cfg(any(test, feature = "testing"))]
 pub mod testing;
 pub mod web_socket_manager;
 
@@ -31,6 +32,7 @@ pub enum ProtocolResponse {
 }
 
 #[derive(Debug)]
+#[frb(non_opaque)]
 /// The state of the Convex WebSocket connection
 pub enum WebSocketState {
     /// The WebSocket is open and connected

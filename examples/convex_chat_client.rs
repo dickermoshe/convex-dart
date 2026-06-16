@@ -15,7 +15,7 @@
 use std::env;
 
 use colored::Colorize;
-use convex::{
+use convex_dart::{
     ConvexClient,
     FunctionResult,
     Value,
