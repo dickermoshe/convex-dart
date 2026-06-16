@@ -9,6 +9,7 @@ use std::{
 
 
 use async_once_cell::OnceCell;
+use convex_sync_types::UserIdentifier;
 use flutter_rust_bridge::{
     frb,
     DartFnFuture,
@@ -34,6 +35,9 @@ use crate::{
 pub use crate::WebSocketState;
 
 pub use convex_sync_types::{AuthenticationToken, UserIdentityAttributes};
+
+
+
 
 mod logging;
 
@@ -458,4 +462,47 @@ pub fn hashmap_to_btreemap(hashmap: HashMap<String, Value>) -> BTreeMap<String, 
 #[frb(sync)]
 pub fn btreemap_to_hashmap(btreemap: BTreeMap<String, Value>) -> HashMap<String, Value> {
     btreemap.into_iter().map(|(k, v)| (k, v)).collect()
+}
+
+// FRB mirrors for types defined in `convex_sync_types`. The real types already
+// carry `#[frb(non_opaque)]`, but FRB only scans `crate::dart` and `crate::value`,
+// so we mirror them here to generate concrete Dart types instead of opaque handles.
+#[frb(non_opaque, mirror(UserIdentifier))]
+pub struct _UserIdentifier(pub String);
+
+#[frb(non_opaque, mirror(UserIdentityAttributes))]
+pub struct _UserIdentityAttributes {
+    pub token_identifier: UserIdentifier,
+    pub issuer: Option<String>,
+    pub subject: Option<String>,
+    pub name: Option<String>,
+    pub given_name: Option<String>,
+    pub family_name: Option<String>,
+    pub nickname: Option<String>,
+    pub preferred_username: Option<String>,
+    pub profile_url: Option<String>,
+    pub picture_url: Option<String>,
+    pub website_url: Option<String>,
+    pub email: Option<String>,
+    pub email_verified: Option<bool>,
+    pub gender: Option<String>,
+    pub birthday: Option<String>,
+    pub timezone: Option<String>,
+    pub language: Option<String>,
+    pub phone_number: Option<String>,
+    pub phone_number_verified: Option<bool>,
+    pub address: Option<String>,
+    /// Stored as RFC3339 string
+    pub updated_at: Option<String>,
+    pub custom_claims: BTreeMap<String, String>,
+}
+
+#[frb(non_opaque, mirror(AuthenticationToken))]
+pub enum _AuthenticationToken {
+    /// Admin key issued by a KeyBroker, potentially acting as a user.
+    Admin(String, Option<UserIdentityAttributes>),
+    /// OpenID Connect JWT
+    User(String),
+    /// Logged out.
+    None,
 }
