@@ -1,6 +1,6 @@
 name: convex_dart
 description: A Flutter package for Convex backend integration, enabling developers to interact with Convex services, manage data, and build applications with real-time synchronization.
-version: 0.6.0-dev.2
+version: 0.7.0-dev.1
 repository: https://github.com/dickermoshe/convex-dart/tree/master/convex_dart
 
 environment:

@@ -1,6 +1,6 @@
 name: convex_dart_cli
 description: Command-line tool for generating type-safe Dart client code from Convex backend schemas
-version: 0.6.0-dev.3
+version: 0.7.0-dev.1
 repository: https://github.com/dickermoshe/convex-dart/tree/master/convex_dart_cli
 
 environment:
@@ -18,7 +18,8 @@ dependencies:
   cli_util: ^0.4.2
   locked_async: ^0.1.1
   equatable: ^2.0.0
-  convex_dart: ^0.6.0-dev.1
+  convex_dart: ^0.7.0-dev.1
+  watcher: ^1.2.1
 
 
 dev_dependencies:

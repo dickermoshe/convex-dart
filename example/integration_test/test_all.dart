@@ -12,9 +12,9 @@ void main() {
   setUpAll(() async {
     await ConvexClient.init(logging: true, onStateChange: (state) {});
   });
-  // primitive_test.main();
-  // serialization_test.main();
-  // tasks_crud_test.main();
-  // http_test.main();
+  primitive_test.main();
+  serialization_test.main();
+  tasks_crud_test.main();
+  http_test.main();
   auth_test.main();
 }

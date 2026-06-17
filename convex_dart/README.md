@@ -1,568 +1,190 @@
 # convex_dart
 
-A Flutter package for seamless integration with [Convex](https://convex.dev) backends. This package provides type-safe, real-time connectivity to your Convex functions with automatic code generation and serialization.
+Flutter bindings for [Convex](https://convex.dev), with generated Dart code for your Convex functions.
 
-- [convex\_dart](#convex_dart)
-  - [Features](#features)
-  - [Installation](#installation)
-  - [Quick Start](#quick-start)
-    - [1. Set up your Convex Backend](#1-set-up-your-convex-backend)
-    - [2. Generate Dart Client](#2-generate-dart-client)
-    - [3. Initialize in Your Flutter App](#3-initialize-in-your-flutter-app)
-    - [4. Use in Your Widgets](#4-use-in-your-widgets)
-  - [Advanced Usage](#advanced-usage)
-    - [Complex Types and Unions](#complex-types-and-unions)
-    - [Error Handling](#error-handling)
-      - [ConvexError](#convexerror)
-      - [ConvexClientError](#convexclienterror)
-    - [Optional Values](#optional-values)
-  - [CLI Integration](#cli-integration)
-    - [CLI Features](#cli-features)
-  - [Type System](#type-system)
-    - [Tips](#tips)
-      - [Undefined Values](#undefined-values)
-      - [Duplicate Stream Events](#duplicate-stream-events)
-  - [Troubleshooting](#troubleshooting)
-    - [Common Issues](#common-issues)
-  - [Disable Precompiled Binaries](#disable-precompiled-binaries)
-  - [Flutter Web](#flutter-web)
-  - [Maintaining the Rust Client](#maintaining-the-rust-client)
-  - [License](#license)
-  - [Updating Rust Client](#updating-rust-client)
+The generated client is the main thing you use day to day: it gives you typed function calls, typed return values, real-time query streams, and Dart models for Convex ids, objects, literals, optionals, unions, arrays, and records.
 
-## Features
+## Packages
 
-- 🔒 **Type Safety**: Fully type-safe API calls with compile-time error checking
-- ⚡ **Real-time**: Built-in support for real-time subscriptions and live queries
-- 🔄 **Auto-generation**: Automatic Dart client generation from your Convex schema
-- 🌐 **Cross-platform**: Works on iOS, Android, Web, macOS, Windows, and Linux
-- 📦 **Zero Config**: Minimal setup required - just generate and use
-- 🎯 **Developer Experience**: IntelliSense, auto-completion, and error handling
+Most apps use two packages together:
 
-## Installation
-
-Add `convex_dart` and `convex_dart_cli` to your `pubspec.yaml`:
-
-```yaml
-dependencies:
-  convex_dart: ^latest_version
-
-dev_dependencies:
-  convex_dart_cli: ^latest_version
+```bash
+dart pub add convex_dart dev:convex_dart_cli
 ```
 
-Or install via the command line:
+- `convex_dart` is the runtime package used by your Flutter app.
+- `convex_dart_cli` reads your Convex function spec and writes the Dart client files into your project.
 
-```
-flutter pub add dev:convex_dart_cli convex_dart
-```
+## Project Layout
 
-## Quick Start
+The default layout assumes your Flutter app and Convex backend live in the same project:
 
-### 1. Set up your Convex Backend
-
-First, create your Convex functions in TypeScript:
-
-```typescript
-// convex/tasks.ts
-import { query, mutation } from "./_generated/server";
-import { v } from "convex/values";
-
-export const getTasks = query({
-  args: {},
-  returns: v.array(v.object({
-    id: v.id("tasks"),
-    title: v.string(),
-    completed: v.boolean(),
-    createdAt: v.number(),
-  })),
-  handler: async (ctx) => {
-    return await ctx.db.query("tasks").collect();
-  },
-});
-
-export const createTask = mutation({
-  args: {
-    title: v.string(),
-  },
-  returns: v.id("tasks"),
-  handler: async (ctx, { title }) => {
-    return await ctx.db.insert("tasks", {
-      title,
-      completed: false,
-      createdAt: Date.now(),
-    });
-  },
-});
-
-export const toggleTaskCompletion = mutation({
-  args: {
-    id: v.id("tasks"),
-  },
-  handler: async (ctx, { id }) => {
-    const task = await ctx.db.get(id);
-    if (!task) {
-      throw new Error("Task not found");
-    }
-    await ctx.db.patch(id, {
-      completed: !task.completed,
-    });
-  },
-});
+```text
+my_app/
+├── pubspec.yaml
+├── lib/
+│   ├── main.dart
+│   └── src/
+│       └── convex/          # generated Dart client
+│           ├── client.dart
+│           ├── schema.dart
+│           ├── literals.dart
+│           └── functions/
+├── package.json
+├── tsconfig.json
+└── convex/                  # Convex backend
+    ├── schema.ts
+    └── tasks.ts
 ```
 
-### 2. Generate Dart Client
+If your backend is somewhere else, you can pass explicit paths.
+Run `dart run convex_dart_cli generate --help` for more information.
 
-Run the CLI tool to generate your Dart client:
+
+## Generate the Client
+
+Run the generator from your app root:
 
 ```bash
 dart run convex_dart_cli generate
 ```
 
-This generates type-safe Dart functions in `lib/src/convex/`:
-
-### 3. Initialize in Your Flutter App
-
-```dart
-// main.dart
-import 'package:flutter/material.dart';
-import 'package:your_app/src/convex/client.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  
-  // Initialize Convex client
-  await ConvexClient.init();
-  
-  runApp(MyApp());
-}
-```
-
-### 4. Use in Your Widgets
-
-```dart
-// lib/pages/tasks_page.dart
-import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:your_app/src/convex/client.dart';
-
-class TasksPage extends StatefulWidget {
-  @override
-  _TasksPageState createState() => _TasksPageState();
-}
-
-class _TasksPageState extends State<TasksPage> {
-  final _controller = TextEditingController();
-
-  // Create a new task
-  Future<void> _createTask() async {
-    if (_controller.text.isNotEmpty) {
-      try {
-        await api.tasks.createTask((title: _controller.text));
-        _controller.clear();
-        // No need to reload - StreamBuilder will update automatically
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error creating task: $e')),
-        );
-      }
-    }
-  }
-
-  // Mark a task as completed or not completed
-  Future<void> _toggleTask(TasksId taskId) async {
-    try {
-      await api.tasks.toggleTaskCompletion((id: taskId));
-      print('Toggle task: $taskId');
-      // No need to reload - StreamBuilder will update automatically
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error toggling task: $e')),
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Tasks')),
-      body: Column(
-        children: [
-          // Add new task
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    decoration: InputDecoration(
-                      hintText: 'Enter task title',
-                      border: OutlineInputBorder(),
-                    ),
-                    onSubmitted: (_) => _createTask(),
-                  ),
-                ),
-                SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: _createTask,
-                  child: Text('Add'),
-                ),
-              ],
-            ),
-          ),
-          
-          // Tasks list with StreamBuilder
-          Expanded(
-            child: StreamBuilder<GetTasksResponse>(
-              stream: getTasksStream(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.error, size: 64, color: Colors.red),
-                        SizedBox(height: 16),
-                        Text('Error loading tasks'),
-                        SizedBox(height: 8),
-                        Text('${snapshot.error}'),
-                      ],
-                    ),
-                  );
-                }
-                
-                if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                
-                final tasks = snapshot.data!.body;
-                
-                if (tasks.isEmpty) {
-                  return Center(child: Text('No tasks yet'));
-                }
-                
-                return ListView.builder(
-                  itemCount: tasks.length,
-                  itemBuilder: (context, index) {
-                    final task = tasks[index];
-                    return ListTile(
-                      leading: Checkbox(
-                        value: task.completed,
-                        onChanged: (_) => _toggleTask(task._id),
-                      ),
-                      title: Text(
-                        task.title,
-                        style: TextStyle(
-                          decoration: task.completed
-                              ? TextDecoration.lineThrough
-                              : null,
-                        ),
-                      ),
-                      subtitle: Text(
-                        'Created: ${DateTime.fromMillisecondsSinceEpoch(task._creationTime.toInt())}',
-                      ),
-                      onTap: () => _toggleTask(task._id),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-}
-```
-
-## Advanced Usage
-
-### Complex Types and Unions
-
-Convex Dart supports all Convex types, including complex unions and nested objects:
-
-```typescript
-// convex/users.ts
-export const getUserProfile = query({
-  args: { userId: v.id("users") },
-  returns: v.union(
-    v.object({
-      type: v.literal("premium"),
-      user: v.object({
-        name: v.string(),
-        email: v.string(),
-        subscription: v.object({
-          plan: v.union(v.literal("monthly"), v.literal("yearly")),
-          expiresAt: v.number(),
-        }),
-      }),
-    }),
-    v.object({
-      type: v.literal("free"),
-      user: v.object({
-        name: v.string(),
-        email: v.string(),
-        trialEndsAt: v.optional(v.number()),
-      }),
-    }),
-    v.null(),
-  ),
-  handler: async (ctx, { userId }) => {
-    // Implementation
-  },
-});
-```
-
-The generated Dart code handles all type checking and serialization:
-
-```dart
-// Usage in Dart
-final profile = await api.users.getUserProfile(
-  (userId: UsersId("user123"))
-);
-
-// Type-safe pattern matching
-profile?.split(
-  (premium) {
-    print('Premium user: ${premium.user.name}');
-    print('Plan: ${premium.user.subscription.plan}');
-  },
-  (free) {
-    print('Free user: ${free.user.name}');
-    if (free.user.trialEndsAt.isDefined) {
-      print('Trial ends: ${free.user.trialEndsAt.value}');
-    }
-  },
-  () => print('User not found'),
-);
-```
-
-### Error Handling
-
-Convex Dart provides two main exception types for comprehensive error handling:
-
-> **Note**: `ConvexError` extends `ConvexClientError`, so you can catch `ConvexClientError` to handle both types, or catch them separately for more specific handling.
-
-#### ConvexError
-
-Thrown when a TypeScript `ConvexError` is thrown on the backend. This contains both the error message and any custom data payload.
-
-```dart
-try {
-  final result = await createUser(args);
-} on ConvexError catch (e) {
-  // Handle application-specific errors from the backend
-  print('Application error: ${e.message}');
-  print('Error data: ${e.data}'); // Custom data from the backend
-  
-  // Example: Handle specific error types based on data
-  if (e.data is Map && e.data['code'] == 'USER_EXISTS') {
-    showErrorSnackBar('User already exists');
-  } else {
-    showErrorSnackBar('Failed to create user: ${e.message}');
-  }
-}
-```
-
-#### ConvexClientError
-
-Thrown for all other types of errors, including:
-
-- Network connectivity issues
-- Internal client errors
-- Server-side errors that aren't application-specific
-- Authentication failures
-- Invalid request parameters
-
-```dart
-try {
-  final result = await getUser(args);
-} on ConvexClientError catch (e) {
-  // Handle client-side and system errors
-  print('Client error: ${e.message}');
-
-}
-```
-
-### Optional Values
-
-Convex Dart uses a type-safe `Optional<T>` type for optional fields:
-
-```dart
-// Check if optional value is defined
-if (user.profilePicture.isDefined) {
-  final url = user.profilePicture.value;
-  // Use the URL
-}
-
-// Provide a default value
-final displayName = user.nickname.asDefined()?.value ?? user.name;
-
-// Transform optional values
-final uppercaseName = user.nickname.map((name) => name.toUpperCase());
-```
-
-## CLI Integration
-
-The `convex_dart_cli` tool integrates seamlessly with your development workflow.
-It wraps the `convex dev` command and generates the Dart client code when any changes are detected.
+By default this generates once, then keeps watching your Convex directory for `.ts` and `.js` changes. Use `--once` in scripts or CI:
 
 ```bash
-# Generate and watch for changes (basic usage)
-convex_dart_cli generate
-
-# Specify custom paths
-convex_dart_cli generate --js ./my-convex-project --output ./lib/src/api
-
-# Production mode
-convex_dart_cli generate --prod
+dart run convex_dart_cli generate --once
 ```
 
-### CLI Features
+To generate from a specific Convex deployment:
 
-- **🔄 Auto-regeneration**: Monitors your Convex functions and regenerates Dart code automatically
-- **⚡ Fast builds**: Incremental generation only rebuilds changed functions
-- **🛠️ Development integration**: Runs `convex dev` in the background
-- **📝 Helpful errors**: Provides detailed error messages and troubleshooting tips
-- **🎯 Type validation**: Ensures all Convex types are supported before generation
+```bash
+dart run convex_dart_cli generate --deployment prod --once
+```
 
-## Type System
+The generator shells out to `convex function-spec`, so your JS package manager needs to be able to run Convex. The default is `npx`; use `--js-package-manager pnpm`, `yarn`, or `bun` if needed.
 
-Convex Dart provides complete type safety for all Convex types:
+## Initialize Convex
 
-| Convex Type          | Dart Type                   |
-| -------------------- | --------------------------- |
-| `v.string()`         | `String`                    |
-| `v.number()`         | `double`                    |
-| `v.boolean()`        | `bool`                      |
-| `v.int64()`          | `int`                       |
-| `v.bytes()`          | `Uint8ListWithEquality`     |
-| `v.id("table")`      | `TableId` (e.g., `TasksId`) |
-| `v.any()`            | `dynamic`                   |
-| `v.null()`           | `void`                      |
-| `v.literal("value")` | Generated literal class     |
-| `v.optional(T)`      | `Optional<T>`               |
-| `v.union(A, B, C)`   | `Union3<A, B, C>`           |
-| `v.array(T)`         | `IList<T>`                  |
-| `v.record(K, V)`     | `IMap<K, V>`                |
-| `v.object({...})`    | Generated record type       |
+Import the generated `client.dart` and initialize the client before calling generated functions:
 
-### Tips
+```dart
+import 'package:flutter/widgets.dart';
+import 'package:your_app/src/convex/client.dart';
 
-#### Undefined Values
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-This package strictly follows the TypeScript types. This means that there is a meaningful difference between `null` and `undefined`.
-Types which are `v.optional(T)` are `Optional<T>` instead of `T?`.
+  await ConvexClient.init(
+    logging: true,
+    onStateChange: (state) {
+      print('WebSocket state changed: $state');
+    },
+  );
 
-To avoid dealing with this complex type, consider using `v.union(v.null(), T)` instead of `v.optional(T)`.
-This will return a `T?` on the Dart side, which is more familiar to Dart developers:
+  runApp(const MyApp());
+}
+```
 
-```typescript
-// Instead of this:
-args: { name: v.optional(v.string()) }
+`ConvexClient.init` is generated with the deployment URL discovered from your Convex project.
 
-// Consider this:
+## Use Generated Functions
+
+Each Convex function gets a Dart file under `functions/`. Import the function you need and call it directly.
+
+```dart
+import 'package:convex_dart/convex_dart.dart';
+import 'package:your_app/src/convex/functions/tasks/createTask.dart';
+import 'package:your_app/src/convex/functions/tasks/getAllTasks.dart';
+
+final created = await createTask((
+  text: 'Ship the README',
+  isCompleted: Optional.undefined(),
+));
+
+final tasks = await getAllTasks();
+print(created.body);
+print(tasks.body.first.id);
+```
+
+Generated responses are records with a `body` field. Generated args are records too, so Dart checks the field names and types at compile time.
+
+Queries also get a stream helper:
+
+```dart
+StreamBuilder<GetAllTasksResponse>(
+  stream: getAllTasksStream().distinct(),
+  builder: (context, snapshot) {
+    if (!snapshot.hasData) return const SizedBox.shrink();
+
+    final tasks = snapshot.data!.body;
+    return Text('${tasks.length} tasks');
+  },
+);
+```
+
+The stream updates when Convex pushes new query results. `.distinct()` is often useful in Flutter widgets to avoid rebuilding on duplicate events.
+
+## Generated Types
+
+Convex values map to regular Dart types where possible:
+
+| Convex type | Dart type |
+| --- | --- |
+| `v.string()` | `String` |
+| `v.number()` | `double` |
+| `v.boolean()` | `bool` |
+| `v.int64()` | `int` |
+| `v.bytes()` | `Uint8ListWithEquality` |
+| `v.id("tasks")` | `TasksId` |
+| `v.array(T)` | `IList<T>` |
+| `v.record(K, V)` | `IMap<K, V>` |
+| `v.object({...})` | Generated record type |
+| `v.literal("x")` | Generated literal class |
+| `v.union(A, B)` | Generated union type |
+| `v.optional(T)` | `Optional<T>` |
+| `v.null()` | `void` for a bare return, or nullable/union shape where applicable |
+
+`v.optional(T)` is represented as `Optional<T>` because Convex distinguishes `undefined` from `null`. If you want Dart's normal nullable style, prefer a Convex union with `null`:
+
+```ts
 args: { name: v.union(v.string(), v.null()) }
 ```
 
-```dart
-// Results in familiar nullable syntax:
-final name = args.name; // String? instead of Optional<String>
-```
+That generates a `String?`-style value on the Dart side instead of an `Optional<String>`.
 
-#### Duplicate Stream Events
+## Errors
 
-The Convex client can sometimes report the same event multiple times.
-To avoid triggering unnecessary re-renders, use `.distinct()` on the stream.
+Backend `ConvexError`s are surfaced as `ConvexError`, including their data payload. Network, server, and client-side failures are surfaced as `ConvexClientError`.
 
 ```dart
-// Use distinct to avoid duplicate events
-final stream = myQueryStream(args).distinct();
+try {
+  await createTask((text: 'New task', isCompleted: Optional.undefined()));
+} on ConvexError catch (e) {
+  print('Convex error: ${e.message}');
+  print(e.data);
+} on ConvexClientError catch (e) {
+  print('Client error: ${e.message}');
+}
 ```
 
-## Troubleshooting
+`ConvexError` extends `ConvexClientError`, so catch it first if you care about the distinction.
 
-### Common Issues
+## Platform Notes
 
-**"ConvexClient not initialized"**
+`convex_dart` uses the official Convex Rust client through Flutter Rust Bridge. Precompiled binaries are downloaded during build by default.
 
-```dart
-// Ensure you call init() before using any functions
-await ConvexClient.init();
-```
-
-**"Function not found"**
-
-- Regenerate your Dart client: `convex_dart_cli generate`
-- Ensure your Convex function is exported
-- Check that the function name matches exactly
-
-**"Type mismatch errors"**
-
-- Verify your Convex function return types match the generated Dart types
-- Regenerate after changing Convex schemas
-- Check for typos in field names
-
-**"Stream not updating"**
-
-- Ensure you're subscribing to a query (not a mutation or action)
-- Check that your Convex function is properly exported
-- Verify network connectivity
-
-## Disable Precompiled Binaries
-
-Convex Dart uses the official Convex Rust client under the hood. To improve the developer experience, precompiled binaries are automatically downloaded during build time. However, if you need to build from source instead, you can set the `use_precompiled_binaries` option to `false` in a `cargokit_options.yaml` file at the root of your application package.
+If you need to build from source, add `cargokit_options.yaml` at the root of your app:
 
 ```yaml
 use_precompiled_binaries: false
 ```
 
-This forces the package to build from source, which may be useful if you encounter issues with the precompiled binaries or need to customize the build.
+Flutter Web is not officially supported.
 
-## Flutter Web
+## Example
 
-This package does not officially support Flutter Web.
-
-You may be able to get it working by disabling precompiled binaries, installing rust and following this [guide](https://cjycode.com/flutter_rust_bridge/manual/integrate/template/setup/web) here.  
-
-## Maintaining the Rust Client
-
-The `rust` directory is a submodule of the [convex-rs](https://github.com/dickermoshe/convex-rs) repository.
-To update the Rust client, run the following command:
-
-```bash
-git subtree pull  --prefix convex_dart/rust https://github.com/dickermoshe/convex-rs branch_name --squash
-```
-
-and then rerun bindings generation:
-
-```bash
-flutter_rust_bridge_codegen generate  
-```
+See [`../example`](../example) for a working Flutter project with a Convex backend and generated client code.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Updating Rust Client
-
-To update the Rust client, run the following command:
-
-```bash
-git subtree pull  --prefix convex_dart/rust https://github.com/dickermoshe/convex-rs branch_name --squash
-```
-
-and then rerun bindings generation:
-
-```bash
-flutter_rust_bridge_codegen generate  
-```
-
-Small fixes may be need to be done by hand after updating the bindings.
+MIT. See [LICENSE](LICENSE).
