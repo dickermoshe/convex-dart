@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  desktop-test:
     name: Flutter integration tests (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
@@ -85,4 +85,102 @@ jobs:
       - name: Run example integration tests on Linux
         if: runner.os == 'Linux'
         run: xvfb-run -a flutter test integration_test/test_all.dart
+        working-directory: example
+
+  mobile-test:
+    name: Flutter integration tests (${{ matrix.platform }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: Android
+            os: ubuntu-latest
+          - platform: iOS
+            os: macos-latest
+
+    env:
+      CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+
+    steps:
+      - name: Check Convex secret
+        shell: bash
+        run: |
+          if [ -z "$CONVEX_DEPLOY_KEY" ]; then
+            echo "::error::Set the CONVEX_DEPLOY_KEY repository secret to a Convex deploy key."
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: example/package-lock.json
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Set up Rust
+        run: rustup toolchain install stable --profile minimal
+
+      - name: Enable Android hardware acceleration
+        if: matrix.platform == 'Android'
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Install JavaScript dependencies
+        run: npm ci
+        working-directory: example
+
+      - name: Install Flutter dependencies
+        run: flutter pub get
+
+      - name: Deploy Convex backend
+        run: npx convex deploy --typecheck=disable
+        working-directory: example
+
+      - name: Generate Dart Convex client
+        run: dart run convex_dart_cli generate --public-serialize --deployment prod
+        working-directory: example
+
+      - name: Run example integration tests on Android
+        if: matrix.platform == 'Android'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis
+          arch: x86_64
+          profile: pixel_7
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: cd example && flutter test integration_test/test_all.dart -d emulator-5554
+
+      - name: Boot iOS simulator
+        if: matrix.platform == 'iOS'
+        shell: bash
+        run: |
+          set -euo pipefail
+          IOS_SIMULATOR_UDID="$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/ && /Shutdown/ { print $2; exit }')"
+          if [ -z "$IOS_SIMULATOR_UDID" ]; then
+            echo "::error::No available iOS simulator was found."
+            xcrun simctl list devices available
+            exit 1
+          fi
+          xcrun simctl boot "$IOS_SIMULATOR_UDID"
+          xcrun simctl bootstatus "$IOS_SIMULATOR_UDID" -b
+          echo "IOS_SIMULATOR_UDID=$IOS_SIMULATOR_UDID" >> "$GITHUB_ENV"
+
+      - name: Run example integration tests on iOS
+        if: matrix.platform == 'iOS'
+        run: flutter test integration_test/test_all.dart -d "$IOS_SIMULATOR_UDID"
         working-directory: example
