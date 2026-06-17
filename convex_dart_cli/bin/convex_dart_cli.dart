@@ -307,7 +307,9 @@ class GenerateCommand extends BetterCommand<CliOptions, int> {
         );
         return success ? 0 : 1;
       } else {
-        final watchDirectory = config.value(CliOptions.jsWatchDirectory);
+        final watchDirectory =
+            config.optionalValue(CliOptions.jsWatchDirectory) ??
+            _defaultWatchDirectory(config)!;
         final watcher = PollingDirectoryWatcher(watchDirectory.path);
         logger.info(
           "Watching ${watchDirectory.path} for changes...",

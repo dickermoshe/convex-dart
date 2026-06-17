@@ -1,7 +1,9 @@
-## 0.6.0-dev.4
+## 0.7.0-dev.1
 
-- Add `onStateChange` parameter to `init` method
-- Add `WebSocketState` enum
+- Add a logging option so that internal Convex logs will be logged to the platform-specific output.
+- Add a callback to monitor the WebSocket state. 
+- Generator files now use deterministic variable names. Regenerating won't trigger massive diffs.
+- convex-rs 0.10.4 and convex-mobile 720a79a
 
 ## 0.6.0-dev.2
 
