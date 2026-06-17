@@ -26,12 +26,12 @@ Stream<Query2Response> query2Stream(Query2Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query2Args args) {
-  return hashmapToBtreemap(hashmap: {'i': encodeValue(args.i)});
+ConvexArgs serialize(Query2Args args) {
+  return encodeArgs({'i': encodeValue(args.i)});
 }
 
 @pragma("vm:prefer-inline")
-Query2Response deserialize(Value map) {
+Query2Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (i: (_v0['i'] as double)),
   );

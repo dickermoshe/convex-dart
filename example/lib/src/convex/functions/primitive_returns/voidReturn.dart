@@ -26,12 +26,12 @@ Stream<VoidReturnResponse> voidReturnStream() {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(void args) {
-  return hashmapToBtreemap(hashmap: {});
+ConvexArgs serialize(void args) {
+  return encodeArgs({});
 }
 
 @pragma("vm:prefer-inline")
-VoidReturnResponse deserialize(Value map) {
+VoidReturnResponse deserialize(ConvexValue map) {
   return (body: (decodeValue(map) as dynamic));
 }
 

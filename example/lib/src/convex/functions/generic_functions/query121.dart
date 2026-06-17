@@ -26,70 +26,68 @@ Stream<Query121Response> query121Stream(Query121Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query121Args args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'i': encodeValue(
-        args.i
-            .map(
-              (_v0) => encodeValue({
-                'posts': encodeValue(
-                  _v0.posts
-                      .map(
-                        (_v1) => encodeValue({
-                          'content': encodeValue(
-                            _v1.content.split(
-                              (_v2) => encodeValue(_v2),
-                              (_v3) => encodeValue({
-                                'media': encodeValue(
-                                  _v3.media
-                                      .map((_v4) => encodeValue(_v4))
-                                      .toIList(),
-                                ),
-                                'text': encodeValue(_v3.text),
-                              }),
-                            ),
-                          ),
-                          'id': encodeValue(_v1.id),
-                          'likes': encodeValue(_v1.likes),
-                          'tags': encodeValue(
-                            _v1.tags.map((_v5) => encodeValue(_v5)).toIList(),
-                          ),
-                        }),
-                      )
-                      .toIList(),
-                ),
-                'user': encodeValue({
-                  'preferences': encodeValue({
-                    for (final _v6 in _v0.user.preferences.entries)
-                      _v6.key: encodeValue(
-                        encodeValue(
-                          _v6.value.split(
-                            (_v7) => encodeValue(_v7),
-                            (_v8) => encodeValue(_v8),
-                            (_v9) => encodeValue(_v9),
+ConvexArgs serialize(Query121Args args) {
+  return encodeArgs({
+    'i': encodeValue(
+      args.i
+          .map(
+            (_v0) => encodeValue({
+              'posts': encodeValue(
+                _v0.posts
+                    .map(
+                      (_v1) => encodeValue({
+                        'content': encodeValue(
+                          _v1.content.split(
+                            (_v2) => encodeValue(_v2),
+                            (_v3) => encodeValue({
+                              'media': encodeValue(
+                                _v3.media
+                                    .map((_v4) => encodeValue(_v4))
+                                    .toIList(),
+                              ),
+                              'text': encodeValue(_v3.text),
+                            }),
                           ),
                         ),
+                        'id': encodeValue(_v1.id),
+                        'likes': encodeValue(_v1.likes),
+                        'tags': encodeValue(
+                          _v1.tags.map((_v5) => encodeValue(_v5)).toIList(),
+                        ),
+                      }),
+                    )
+                    .toIList(),
+              ),
+              'user': encodeValue({
+                'preferences': encodeValue({
+                  for (final _v6 in _v0.user.preferences.entries)
+                    _v6.key: encodeValue(
+                      encodeValue(
+                        _v6.value.split(
+                          (_v7) => encodeValue(_v7),
+                          (_v8) => encodeValue(_v8),
+                          (_v9) => encodeValue(_v9),
+                        ),
                       ),
-                  }),
-                  'profile': encodeValue({
-                    if (_v0.user.profile.avatar.isDefined)
-                      'avatar': encodeValue(
-                        _v0.user.profile.avatar.asDefined().value,
-                      ),
-                    'name': encodeValue(_v0.user.profile.name),
-                  }),
+                    ),
+                }),
+                'profile': encodeValue({
+                  if (_v0.user.profile.avatar.isDefined)
+                    'avatar': encodeValue(
+                      _v0.user.profile.avatar.asDefined().value,
+                    ),
+                  'name': encodeValue(_v0.user.profile.name),
                 }),
               }),
-            )
-            .toIList(),
-      ),
-    },
-  );
+            }),
+          )
+          .toIList(),
+    ),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query121Response deserialize(Value map) {
+Query121Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i: (_v0['i'] as IList<dynamic>)

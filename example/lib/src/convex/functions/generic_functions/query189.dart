@@ -26,27 +26,25 @@ Stream<Query189Response> query189Stream(Query189Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query189Args args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'i': encodeValue(
-        args.i
-            .map(
-              (_v0) => encodeValue({
-                'children': encodeValue(
-                  _v0.children.map((_v1) => encodeValue(_v1)).toIList(),
-                ),
-                'id': encodeValue(_v0.id),
-              }),
-            )
-            .toIList(),
-      ),
-    },
-  );
+ConvexArgs serialize(Query189Args args) {
+  return encodeArgs({
+    'i': encodeValue(
+      args.i
+          .map(
+            (_v0) => encodeValue({
+              'children': encodeValue(
+                _v0.children.map((_v1) => encodeValue(_v1)).toIList(),
+              ),
+              'id': encodeValue(_v0.id),
+            }),
+          )
+          .toIList(),
+    ),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query189Response deserialize(Value map) {
+Query189Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i: (_v0['i'] as IList<dynamic>)

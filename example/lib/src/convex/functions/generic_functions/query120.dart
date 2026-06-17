@@ -26,35 +26,33 @@ Stream<Query120Response> query120Stream(Query120Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query120Args args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'i': encodeValue({
-        'items': encodeValue(
-          args.i.items
-              .map(
-                (_v0) => encodeValue({
-                  'id': encodeValue(_v0.id),
-                  'metadata': encodeValue({
-                    for (final _v1 in _v0.metadata.entries)
-                      _v1.key: encodeValue(encodeValue(_v1.value)),
-                  }),
-                  'name': encodeValue(_v0.name),
-                  'price': encodeValue(_v0.price),
-                  if (_v0.quantity.isDefined)
-                    'quantity': encodeValue(_v0.quantity.asDefined().value),
+ConvexArgs serialize(Query120Args args) {
+  return encodeArgs({
+    'i': encodeValue({
+      'items': encodeValue(
+        args.i.items
+            .map(
+              (_v0) => encodeValue({
+                'id': encodeValue(_v0.id),
+                'metadata': encodeValue({
+                  for (final _v1 in _v0.metadata.entries)
+                    _v1.key: encodeValue(encodeValue(_v1.value)),
                 }),
-              )
-              .toIList(),
-        ),
-        'total': encodeValue(args.i.total),
-      }),
-    },
-  );
+                'name': encodeValue(_v0.name),
+                'price': encodeValue(_v0.price),
+                if (_v0.quantity.isDefined)
+                  'quantity': encodeValue(_v0.quantity.asDefined().value),
+              }),
+            )
+            .toIList(),
+      ),
+      'total': encodeValue(args.i.total),
+    }),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query120Response deserialize(Value map) {
+Query120Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i: (_v0['i'] as IMap<String, dynamic>).then(

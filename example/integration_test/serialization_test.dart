@@ -3,9 +3,8 @@
 import 'package:api/src/convex/literals.dart';
 import 'package:api/src/convex/schema.dart';
 import 'package:convex_dart/convex_dart.dart';
-import 'package:convex_dart/src/rust/value.dart';
+import 'package:convex_dart/src/convex_value.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:api/src/convex/functions/generic_functions/query1.dart'
     as tasksQuery1;
@@ -230,7 +229,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery1.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery1.deserialize(value1);
       expect(deserialized, data);
     }
@@ -251,7 +250,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery2.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery2.deserialize(value1);
       expect(deserialized, data);
     }
@@ -272,7 +271,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery3.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery3.deserialize(value1);
       expect(deserialized, data);
     }
@@ -293,7 +292,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery4.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery4.deserialize(value1);
       expect(deserialized, data);
     }
@@ -444,7 +443,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery5.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery5.deserialize(value1);
       expect(deserialized, data);
     }
@@ -465,7 +464,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery6.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery6.deserialize(value1);
       expect(deserialized, data);
     }
@@ -486,7 +485,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery7.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery7.deserialize(value1);
       expect(deserialized, data);
     }
@@ -507,7 +506,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery9.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery9.deserialize(value1);
       expect(deserialized, data);
     }
@@ -528,7 +527,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery10.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery10.deserialize(value1);
       expect(deserialized, data);
     }
@@ -549,7 +548,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery11.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery11.deserialize(value1);
       expect(deserialized, data);
     }
@@ -570,7 +569,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery13.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery13.deserialize(value1);
       expect(deserialized, data);
     }
@@ -591,7 +590,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery14.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery14.deserialize(value1);
       expect(deserialized, data);
     }
@@ -612,7 +611,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery15.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery15.deserialize(value1);
       expect(deserialized, data);
     }
@@ -633,7 +632,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery16.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery16.deserialize(value1);
       expect(deserialized, data);
     }
@@ -759,7 +758,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery17.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery17.deserialize(value1);
       expect(deserialized, data);
     }
@@ -780,7 +779,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery18.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery18.deserialize(value1);
       expect(deserialized, data);
     }
@@ -801,7 +800,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery19.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery19.deserialize(value1);
       expect(deserialized, data);
     }
@@ -822,7 +821,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery20.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery20.deserialize(value1);
       expect(deserialized, data);
     }
@@ -843,7 +842,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery21.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery21.deserialize(value1);
       expect(deserialized, data);
     }
@@ -864,7 +863,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery22.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery22.deserialize(value1);
       expect(deserialized, data);
     }
@@ -885,7 +884,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery24.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery24.deserialize(value1);
       expect(deserialized, data);
     }
@@ -906,7 +905,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery25.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery25.deserialize(value1);
       expect(deserialized, data);
     }
@@ -927,7 +926,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery26.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery26.deserialize(value1);
       expect(deserialized, data);
     }
@@ -948,7 +947,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery27.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery27.deserialize(value1);
       expect(deserialized, data);
     }
@@ -1047,7 +1046,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery28.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery28.deserialize(value1);
       expect(deserialized, data);
     }
@@ -1068,7 +1067,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery29.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery29.deserialize(value1);
       expect(deserialized, data);
     }
@@ -1089,7 +1088,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery30.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery30.deserialize(value1);
       expect(deserialized, data);
     }
@@ -1110,7 +1109,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery31.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery31.deserialize(value1);
       expect(deserialized, data);
     }
@@ -1131,7 +1130,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery32.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery32.deserialize(value1);
       expect(deserialized, data);
     }
@@ -1152,7 +1151,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery33.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery33.deserialize(value1);
       expect(deserialized, data);
     }
@@ -1166,7 +1165,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery34WithNull.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery34WithNull.deserialize(value1);
       expect(deserialized, data);
     }
@@ -1178,7 +1177,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery34NonNull.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery34NonNull.deserialize(value1);
       expect(deserialized, data);
     }
@@ -1241,7 +1240,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery35.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery35.deserialize(value1);
       expect(deserialized, data);
     }
@@ -1293,7 +1292,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery36.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery36.deserialize(value1);
       expect(deserialized, data);
     }
@@ -1314,7 +1313,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery37.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery37.deserialize(value1);
       expect(deserialized, data);
     }
@@ -1335,7 +1334,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery38.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery38.deserialize(value1);
       expect(deserialized, data);
     }
@@ -1773,7 +1772,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery39.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery39.deserialize(value1);
       expect(deserialized, data);
     }
@@ -1877,7 +1876,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery40.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery40.deserialize(value1);
       expect(deserialized, data);
     }
@@ -1968,7 +1967,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery41.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery41.deserialize(value1);
       expect(deserialized, data);
     }
@@ -1989,7 +1988,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery42.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery42.deserialize(value1);
       expect(deserialized, data);
     }
@@ -2022,7 +2021,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery43.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery43.deserialize(value1);
       expect(deserialized, data);
     }
@@ -2054,7 +2053,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery44.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery44.deserialize(value1);
       expect(deserialized, data);
     }
@@ -2122,7 +2121,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery45.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery45.deserialize(value1);
       expect(deserialized, data);
     }
@@ -2151,7 +2150,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery58.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery58.deserialize(value1);
       expect(deserialized, data);
     }
@@ -2211,7 +2210,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery59.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery59.deserialize(value1);
       expect(deserialized, data);
     }
@@ -2256,7 +2255,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery60.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery60.deserialize(value1);
       expect(deserialized, data);
     }
@@ -2325,7 +2324,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery61.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery61.deserialize(value1);
       expect(deserialized, data);
     }
@@ -2709,7 +2708,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery62.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery62.deserialize(value1);
       expect(deserialized, data);
     }
@@ -2800,7 +2799,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery63.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery63.deserialize(value1);
       expect(deserialized, data);
     }
@@ -2855,7 +2854,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery64.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery64.deserialize(value1);
       expect(deserialized, data);
     }
@@ -2900,7 +2899,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery65.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery65.deserialize(value1);
       expect(deserialized, data);
     }
@@ -2921,7 +2920,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery66.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery66.deserialize(value1);
       expect(deserialized, data);
     }
@@ -2954,7 +2953,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery67.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery67.deserialize(value1);
       expect(deserialized, data);
     }
@@ -3042,7 +3041,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery69.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery69.deserialize(value1);
       expect(deserialized, data);
     }
@@ -3129,7 +3128,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery70.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery70.deserialize(value1);
       expect(deserialized, data);
     }
@@ -3210,7 +3209,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery71.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery71.deserialize(value1);
       expect(deserialized, data);
     }
@@ -3311,7 +3310,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery72.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery72.deserialize(value1);
       expect(deserialized, data);
     }
@@ -3926,7 +3925,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery73.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery73.deserialize(value1);
       expect(deserialized, data);
     }
@@ -4016,7 +4015,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery74.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery74.deserialize(value1);
       expect(deserialized, data);
     }
@@ -4100,7 +4099,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery75.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery75.deserialize(value1);
       expect(deserialized, data);
     }
@@ -4190,7 +4189,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery76.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery76.deserialize(value1);
       expect(deserialized, data);
     }
@@ -4252,7 +4251,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery77.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery77.deserialize(value1);
       expect(deserialized, data);
     }
@@ -4360,7 +4359,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery78.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery78.deserialize(value1);
       expect(deserialized, data);
     }
@@ -4458,7 +4457,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery79.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery79.deserialize(value1);
       expect(deserialized, data);
     }
@@ -4560,7 +4559,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery81.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery81.deserialize(value1);
       expect(deserialized, data);
     }
@@ -4648,7 +4647,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery82.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery82.deserialize(value1);
       expect(deserialized, data);
     }
@@ -4714,7 +4713,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery83.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery83.deserialize(value1);
       expect(deserialized, data);
     }
@@ -4805,7 +4804,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery84.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery84.deserialize(value1);
       expect(deserialized, data);
     }
@@ -5222,7 +5221,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery85.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery85.deserialize(value1);
       expect(deserialized, data);
     }
@@ -5322,7 +5321,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery86.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery86.deserialize(value1);
       expect(deserialized, data);
     }
@@ -5392,7 +5391,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery87.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery87.deserialize(value1);
       expect(deserialized, data);
     }
@@ -5493,7 +5492,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery88.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery88.deserialize(value1);
       expect(deserialized, data);
     }
@@ -5548,7 +5547,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery89.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery89.deserialize(value1);
       expect(deserialized, data);
     }
@@ -5627,7 +5626,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery90.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery90.deserialize(value1);
       expect(deserialized, data);
     }
@@ -5648,7 +5647,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery92.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery92.deserialize(value1);
       expect(deserialized, data);
     }
@@ -5669,7 +5668,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery93.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery93.deserialize(value1);
       expect(deserialized, data);
     }
@@ -5690,7 +5689,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery94.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery94.deserialize(value1);
       expect(deserialized, data);
     }
@@ -5711,7 +5710,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery95.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery95.deserialize(value1);
       expect(deserialized, data);
     }
@@ -5732,7 +5731,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery96.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery96.deserialize(value1);
       expect(deserialized, data);
     }
@@ -5753,7 +5752,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery97.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery97.deserialize(value1);
       expect(deserialized, data);
     }
@@ -5924,7 +5923,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery98.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery98.deserialize(value1);
       expect(deserialized, data);
     }
@@ -5945,7 +5944,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery100.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery100.deserialize(value1);
       expect(deserialized, data);
     }
@@ -5966,7 +5965,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery101.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery101.deserialize(value1);
       expect(deserialized, data);
     }
@@ -5987,7 +5986,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery102.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery102.deserialize(value1);
       expect(deserialized, data);
     }
@@ -6008,7 +6007,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery103.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery103.deserialize(value1);
       expect(deserialized, data);
     }
@@ -6029,7 +6028,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery104.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery104.deserialize(value1);
       expect(deserialized, data);
     }
@@ -6050,7 +6049,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery105.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery105.deserialize(value1);
       expect(deserialized, data);
     }
@@ -6071,7 +6070,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery106.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery106.deserialize(value1);
       expect(deserialized, data);
     }
@@ -6242,7 +6241,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery107.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery107.deserialize(value1);
       expect(deserialized, data);
     }
@@ -6263,7 +6262,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery111.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery111.deserialize(value1);
       expect(deserialized, data);
     }
@@ -6344,7 +6343,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery112.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery112.deserialize(value1);
       expect(deserialized, data);
     }
@@ -6415,7 +6414,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery113.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery113.deserialize(value1);
       expect(deserialized, data);
     }
@@ -6442,7 +6441,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery114.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery114.deserialize(value1);
       expect(deserialized, data);
     }
@@ -6597,7 +6596,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery115.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery115.deserialize(value1);
       expect(deserialized, data);
     }
@@ -6731,7 +6730,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery116.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery116.deserialize(value1);
       expect(deserialized, data);
     }
@@ -6947,7 +6946,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery117.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery117.deserialize(value1);
       expect(deserialized, data);
     }
@@ -7061,7 +7060,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery118.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery118.deserialize(value1);
       expect(deserialized, data);
     }
@@ -7172,7 +7171,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery119.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery119.deserialize(value1);
       expect(deserialized, data);
     }
@@ -7994,7 +7993,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery120.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery120.deserialize(value1);
       expect(deserialized, data);
     }
@@ -13111,7 +13110,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery121.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery121.deserialize(value1);
       expect(deserialized, data);
     }
@@ -13963,7 +13962,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery122.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery122.deserialize(value1);
       expect(deserialized, data);
     }
@@ -14222,7 +14221,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery123.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery123.deserialize(value1);
       expect(deserialized, data);
     }
@@ -18651,7 +18650,7 @@ void main() {
     ];
     for (final data in datas) {
       final serialized = tasksQuery124.serialize(data);
-      final value1 = Value.object(serialized);
+      final value1 = ConvexValue.object(serialized.lock);
       final deserialized = tasksQuery124.deserialize(value1);
       expect(deserialized, data);
     }

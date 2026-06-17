@@ -26,12 +26,12 @@ Stream<RecordReturnResponse> recordReturnStream() {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(void args) {
-  return hashmapToBtreemap(hashmap: {});
+ConvexArgs serialize(void args) {
+  return encodeArgs({});
 }
 
 @pragma("vm:prefer-inline")
-RecordReturnResponse deserialize(Value map) {
+RecordReturnResponse deserialize(ConvexValue map) {
   return (
     body: (decodeValue(map) as IMap<String, dynamic>).map(
       (_v0, _v1) => MapEntry(_v0, (_v1 as String)),

@@ -8,14 +8,11 @@ export 'unions.dart';
 export 'encode.dart';
 export 'package:fast_immutable_collections/fast_immutable_collections.dart';
 
-export 'rust/lib.dart' show BTreeMapStringValue;
 export 'internal_convex_client.dart' show InternalConvexClient;
 export 'optional.dart';
-export './rust/value.dart' show Value;
-export './rust/dart.dart' show hashmapToBtreemap, btreemapToHashmap;
-export 'rust/value.dart' show Value_Object;
+export 'convex_value.dart' show ConvexArgs, ConvexValue;
 export 'bytes.dart' show Uint8ListWithEquality;
-export 'package:convex_dart/src/rust/sync.dart' show WebSocketState;
+export 'web_socket_state.dart' show WebSocketState;
 
 extension Then<T> on T {
   R then<R>(R Function(T) then) {

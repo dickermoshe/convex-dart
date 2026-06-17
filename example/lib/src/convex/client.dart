@@ -715,7 +715,7 @@ class ConvexClient {
     );
   }
 
-  static final String httpUrl = "http://127.0.0.1:3210";
+  static final String httpUrl = "http://127.0.0.1:3211";
 
   static Future<$http.Response> get$api$v1$$({
     Map<String, String>? headers,

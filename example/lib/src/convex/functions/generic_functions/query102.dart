@@ -26,12 +26,12 @@ Stream<Query102Response> query102Stream(Query102Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query102Args args) {
-  return hashmapToBtreemap(hashmap: {'i': encodeValue(args.i.value)});
+ConvexArgs serialize(Query102Args args) {
+  return encodeArgs({'i': encodeValue(args.i.value)});
 }
 
 @pragma("vm:prefer-inline")
-Query102Response deserialize(Value map) {
+Query102Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (i: $admin$user$guest.fromValue(_v0['i'])),
   );

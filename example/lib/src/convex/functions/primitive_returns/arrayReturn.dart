@@ -26,12 +26,12 @@ Stream<ArrayReturnResponse> arrayReturnStream() {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(void args) {
-  return hashmapToBtreemap(hashmap: {});
+ConvexArgs serialize(void args) {
+  return encodeArgs({});
 }
 
 @pragma("vm:prefer-inline")
-ArrayReturnResponse deserialize(Value map) {
+ArrayReturnResponse deserialize(ConvexValue map) {
   return (
     body: (decodeValue(map) as IList<dynamic>)
         .map((_v0) => (_v0 as String))

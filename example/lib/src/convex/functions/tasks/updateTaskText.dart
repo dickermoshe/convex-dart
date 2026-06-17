@@ -17,14 +17,15 @@ Future<UpdateTaskTextResponse> updateTaskText(UpdateTaskTextArgs args) async {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(UpdateTaskTextArgs args) {
-  return hashmapToBtreemap(
-    hashmap: {'id': encodeValue(args.id), 'text': encodeValue(args.text)},
-  );
+ConvexArgs serialize(UpdateTaskTextArgs args) {
+  return encodeArgs({
+    'id': encodeValue(args.id),
+    'text': encodeValue(args.text),
+  });
 }
 
 @pragma("vm:prefer-inline")
-UpdateTaskTextResponse deserialize(Value map) {
+UpdateTaskTextResponse deserialize(ConvexValue map) {
   return (body: null);
 }
 

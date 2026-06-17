@@ -26,25 +26,23 @@ Stream<Query214Response> query214Stream(Query214Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query214Args args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'i': encodeValue(
-        args.i
-            .map(
-              (_v0) => encodeValue({
-                'id': encodeValue(_v0.id),
-                'score': encodeValue(_v0.score),
-              }),
-            )
-            .toIList(),
-      ),
-    },
-  );
+ConvexArgs serialize(Query214Args args) {
+  return encodeArgs({
+    'i': encodeValue(
+      args.i
+          .map(
+            (_v0) => encodeValue({
+              'id': encodeValue(_v0.id),
+              'score': encodeValue(_v0.score),
+            }),
+          )
+          .toIList(),
+    ),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query214Response deserialize(Value map) {
+Query214Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i: (_v0['i'] as IList<dynamic>)

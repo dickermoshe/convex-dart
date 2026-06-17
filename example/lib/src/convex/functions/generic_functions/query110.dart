@@ -26,12 +26,12 @@ Stream<Query110Response> query110Stream(Query110Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query110Args args) {
-  return hashmapToBtreemap(hashmap: {'i': encodeValue(args.i)});
+ConvexArgs serialize(Query110Args args) {
+  return encodeArgs({'i': encodeValue(args.i)});
 }
 
 @pragma("vm:prefer-inline")
-Query110Response deserialize(Value map) {
+Query110Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (i: _v0['i'] == null ? null : $mixed.validate(_v0['i'])),
   );

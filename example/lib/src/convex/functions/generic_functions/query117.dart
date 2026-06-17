@@ -26,34 +26,32 @@ Stream<Query117Response> query117Stream(Query117Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query117Args args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'i': encodeValue({
-        'comments': encodeValue(
-          args.i.comments
-              .map(
-                (_v0) => encodeValue({
-                  'author': encodeValue(_v0.author),
-                  'text': encodeValue(_v0.text),
-                  'timestamp': encodeValue(_v0.timestamp),
-                }),
-              )
-              .toIList(),
-        ),
-        if (args.i.reviewer.isDefined)
-          'reviewer': encodeValue({
-            'id': encodeValue(args.i.reviewer.asDefined().value.id),
-            'name': encodeValue(args.i.reviewer.asDefined().value.name),
-          }),
-        'status': encodeValue(args.i.status.value),
-      }),
-    },
-  );
+ConvexArgs serialize(Query117Args args) {
+  return encodeArgs({
+    'i': encodeValue({
+      'comments': encodeValue(
+        args.i.comments
+            .map(
+              (_v0) => encodeValue({
+                'author': encodeValue(_v0.author),
+                'text': encodeValue(_v0.text),
+                'timestamp': encodeValue(_v0.timestamp),
+              }),
+            )
+            .toIList(),
+      ),
+      if (args.i.reviewer.isDefined)
+        'reviewer': encodeValue({
+          'id': encodeValue(args.i.reviewer.asDefined().value.id),
+          'name': encodeValue(args.i.reviewer.asDefined().value.name),
+        }),
+      'status': encodeValue(args.i.status.value),
+    }),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query117Response deserialize(Value map) {
+Query117Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i: (_v0['i'] as IMap<String, dynamic>).then(

@@ -26,19 +26,17 @@ Stream<Query215Response> query215Stream(Query215Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query215Args args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      if (args.i.isDefined)
-        'i': encodeValue(
-          args.i.asDefined().value.map((_v0) => encodeValue(_v0)).toIList(),
-        ),
-    },
-  );
+ConvexArgs serialize(Query215Args args) {
+  return encodeArgs({
+    if (args.i.isDefined)
+      'i': encodeValue(
+        args.i.asDefined().value.map((_v0) => encodeValue(_v0)).toIList(),
+      ),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query215Response deserialize(Value map) {
+Query215Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i: _v0.containsKey('i')

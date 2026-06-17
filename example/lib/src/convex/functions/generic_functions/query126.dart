@@ -26,16 +26,14 @@ Stream<Query126Response> query126Stream(Query126Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query126Args args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'i': encodeValue({'stepType': encodeValue(args.i.stepType.value)}),
-    },
-  );
+ConvexArgs serialize(Query126Args args) {
+  return encodeArgs({
+    'i': encodeValue({'stepType': encodeValue(args.i.stepType.value)}),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query126Response deserialize(Value map) {
+Query126Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i: (_v0['i'] as IMap<String, dynamic>).then(

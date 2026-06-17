@@ -19,12 +19,12 @@ Future<ToggleTaskCompletionResponse> toggleTaskCompletion(
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(ToggleTaskCompletionArgs args) {
-  return hashmapToBtreemap(hashmap: {'id': encodeValue(args.id)});
+ConvexArgs serialize(ToggleTaskCompletionArgs args) {
+  return encodeArgs({'id': encodeValue(args.id)});
 }
 
 @pragma("vm:prefer-inline")
-ToggleTaskCompletionResponse deserialize(Value map) {
+ToggleTaskCompletionResponse deserialize(ConvexValue map) {
   return (body: (decodeValue(map) as bool));
 }
 

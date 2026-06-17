@@ -26,39 +26,37 @@ Stream<Query128Response> query128Stream(Query128Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query128Args args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'i': encodeValue({
-        'triggers': encodeValue(
-          args.i.triggers
-              .map(
-                (_v0) => encodeValue(
-                  _v0.split(
-                    (_v1) => encodeValue({
-                      'cron': encodeValue(_v1.cron),
-                      'type': encodeValue(_v1.type),
-                    }),
-                    (_v2) => encodeValue({
-                      'type': encodeValue(_v2.type),
-                      'url': encodeValue(_v2.url),
-                    }),
-                    (_v3) => encodeValue({
-                      'eventType': encodeValue(_v3.eventType),
-                      'type': encodeValue(_v3.type),
-                    }),
-                  ),
+ConvexArgs serialize(Query128Args args) {
+  return encodeArgs({
+    'i': encodeValue({
+      'triggers': encodeValue(
+        args.i.triggers
+            .map(
+              (_v0) => encodeValue(
+                _v0.split(
+                  (_v1) => encodeValue({
+                    'cron': encodeValue(_v1.cron),
+                    'type': encodeValue(_v1.type),
+                  }),
+                  (_v2) => encodeValue({
+                    'type': encodeValue(_v2.type),
+                    'url': encodeValue(_v2.url),
+                  }),
+                  (_v3) => encodeValue({
+                    'eventType': encodeValue(_v3.eventType),
+                    'type': encodeValue(_v3.type),
+                  }),
                 ),
-              )
-              .toIList(),
-        ),
-      }),
-    },
-  );
+              ),
+            )
+            .toIList(),
+      ),
+    }),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query128Response deserialize(Value map) {
+Query128Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i: (_v0['i'] as IMap<String, dynamic>).then(

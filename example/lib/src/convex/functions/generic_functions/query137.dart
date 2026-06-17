@@ -26,27 +26,25 @@ Stream<Query137Response> query137Stream(Query137Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query137Args args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'i': encodeValue(
-        args.i.split(
-          (_v0) => encodeValue({
-            'a': encodeValue(_v0.a),
-            'type': encodeValue(_v0.type),
-          }),
-          (_v1) => encodeValue({
-            'b': encodeValue(_v1.b),
-            'type': encodeValue(_v1.type),
-          }),
-        ),
+ConvexArgs serialize(Query137Args args) {
+  return encodeArgs({
+    'i': encodeValue(
+      args.i.split(
+        (_v0) => encodeValue({
+          'a': encodeValue(_v0.a),
+          'type': encodeValue(_v0.type),
+        }),
+        (_v1) => encodeValue({
+          'b': encodeValue(_v1.b),
+          'type': encodeValue(_v1.type),
+        }),
       ),
-    },
-  );
+    ),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query137Response deserialize(Value map) {
+Query137Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i: Union2<({String a, $A type}), ({double b, $B type})>(() {

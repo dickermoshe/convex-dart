@@ -30,14 +30,12 @@ Stream<GetTasksByStatusResponse> getTasksByStatusStream(
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(GetTasksByStatusArgs args) {
-  return hashmapToBtreemap(
-    hashmap: {'isCompleted': encodeValue(args.isCompleted)},
-  );
+ConvexArgs serialize(GetTasksByStatusArgs args) {
+  return encodeArgs({'isCompleted': encodeValue(args.isCompleted)});
 }
 
 @pragma("vm:prefer-inline")
-GetTasksByStatusResponse deserialize(Value map) {
+GetTasksByStatusResponse deserialize(ConvexValue map) {
   return (
     body: (decodeValue(map) as IList<dynamic>)
         .map(

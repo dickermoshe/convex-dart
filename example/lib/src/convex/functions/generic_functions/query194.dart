@@ -26,14 +26,14 @@ Stream<Query194Response> query194Stream(Query194Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query194Args args) {
-  return hashmapToBtreemap(
-    hashmap: {if (args.i.isDefined) 'i': encodeValue(args.i.asDefined().value)},
-  );
+ConvexArgs serialize(Query194Args args) {
+  return encodeArgs({
+    if (args.i.isDefined) 'i': encodeValue(args.i.asDefined().value),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query194Response deserialize(Value map) {
+Query194Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i: _v0.containsKey('i')

@@ -26,19 +26,17 @@ Stream<Query72Response> query72Stream(Query72Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query72Args args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'i': encodeValue({
-        for (final _v0 in args.i.entries)
-          _v0.key: encodeValue(encodeValue(_v0.value)),
-      }),
-    },
-  );
+ConvexArgs serialize(Query72Args args) {
+  return encodeArgs({
+    'i': encodeValue({
+      for (final _v0 in args.i.entries)
+        _v0.key: encodeValue(encodeValue(_v0.value)),
+    }),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query72Response deserialize(Value map) {
+Query72Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i: (_v0['i'] as IMap<String, dynamic>).map(

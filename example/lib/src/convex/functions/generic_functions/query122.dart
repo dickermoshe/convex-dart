@@ -26,40 +26,37 @@ Stream<Query122Response> query122Stream(Query122Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query122Args args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'i': encodeValue({
-        for (final _v0 in args.i.entries)
-          _v0.key: encodeValue(
-            encodeValue({
-              'required': encodeValue(_v0.value.required),
-              'schema': encodeValue(
-                _v0.value.schema.split(
-                  (_v1) => encodeValue({
-                    'primitive': encodeValue(_v1.primitive.value),
+ConvexArgs serialize(Query122Args args) {
+  return encodeArgs({
+    'i': encodeValue({
+      for (final _v0 in args.i.entries)
+        _v0.key: encodeValue(
+          encodeValue({
+            'required': encodeValue(_v0.value.required),
+            'schema': encodeValue(
+              _v0.value.schema.split(
+                (_v1) => encodeValue({
+                  'primitive': encodeValue(_v1.primitive.value),
+                }),
+                (_v2) => encodeValue({
+                  'fields': encodeValue({
+                    for (final _v3 in _v2.fields.entries)
+                      _v3.key: encodeValue(encodeValue(_v3.value)),
                   }),
-                  (_v2) => encodeValue({
-                    'fields': encodeValue({
-                      for (final _v3 in _v2.fields.entries)
-                        _v3.key: encodeValue(encodeValue(_v3.value)),
-                    }),
-                  }),
-                  (_v4) => encodeValue({
-                    'elementType': encodeValue(_v4.elementType),
-                  }),
-                ),
+                }),
+                (_v4) =>
+                    encodeValue({'elementType': encodeValue(_v4.elementType)}),
               ),
-              'type': encodeValue(_v0.value.type.value),
-            }),
-          ),
-      }),
-    },
-  );
+            ),
+            'type': encodeValue(_v0.value.type.value),
+          }),
+        ),
+    }),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query122Response deserialize(Value map) {
+Query122Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i: (_v0['i'] as IMap<String, dynamic>).map(

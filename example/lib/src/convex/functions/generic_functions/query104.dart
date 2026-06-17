@@ -26,22 +26,20 @@ Stream<Query104Response> query104Stream(Query104Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query104Args args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'i': encodeValue(
-        args.i?.split(
-          (_v0) => encodeValue(_v0),
-          (_v1) => encodeValue(_v1),
-          (_v2) => encodeValue(_v2),
-        ),
+ConvexArgs serialize(Query104Args args) {
+  return encodeArgs({
+    'i': encodeValue(
+      args.i?.split(
+        (_v0) => encodeValue(_v0),
+        (_v1) => encodeValue(_v1),
+        (_v2) => encodeValue(_v2),
       ),
-    },
-  );
+    ),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query104Response deserialize(Value map) {
+Query104Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i: Union3<String, double, bool>(() {

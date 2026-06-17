@@ -26,12 +26,12 @@ Stream<IdReturnResponse> idReturnStream() {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(void args) {
-  return hashmapToBtreemap(hashmap: {});
+ConvexArgs serialize(void args) {
+  return encodeArgs({});
 }
 
 @pragma("vm:prefer-inline")
-IdReturnResponse deserialize(Value map) {
+IdReturnResponse deserialize(ConvexValue map) {
   return (body: TasksId(decodeValue(map) as String));
 }
 

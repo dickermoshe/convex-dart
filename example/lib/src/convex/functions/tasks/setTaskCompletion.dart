@@ -19,17 +19,15 @@ Future<SetTaskCompletionResponse> setTaskCompletion(
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(SetTaskCompletionArgs args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'id': encodeValue(args.id),
-      'isCompleted': encodeValue(args.isCompleted),
-    },
-  );
+ConvexArgs serialize(SetTaskCompletionArgs args) {
+  return encodeArgs({
+    'id': encodeValue(args.id),
+    'isCompleted': encodeValue(args.isCompleted),
+  });
 }
 
 @pragma("vm:prefer-inline")
-SetTaskCompletionResponse deserialize(Value map) {
+SetTaskCompletionResponse deserialize(ConvexValue map) {
   return (body: null);
 }
 

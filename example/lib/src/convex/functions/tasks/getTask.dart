@@ -26,12 +26,12 @@ Stream<GetTaskResponse> getTaskStream(GetTaskArgs args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(GetTaskArgs args) {
-  return hashmapToBtreemap(hashmap: {'id': encodeValue(args.id)});
+ConvexArgs serialize(GetTaskArgs args) {
+  return encodeArgs({'id': encodeValue(args.id)});
 }
 
 @pragma("vm:prefer-inline")
-GetTaskResponse deserialize(Value map) {
+GetTaskResponse deserialize(ConvexValue map) {
   return (
     body: (decodeValue(map) as IMap<String, dynamic>?)?.then(
       (_v0) => (

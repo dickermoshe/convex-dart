@@ -26,16 +26,14 @@ Stream<Query174Response> query174Stream(Query174Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query174Args args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'i': encodeValue(args.i.map((_v0) => encodeValue(_v0)).toIList()),
-    },
-  );
+ConvexArgs serialize(Query174Args args) {
+  return encodeArgs({
+    'i': encodeValue(args.i.map((_v0) => encodeValue(_v0)).toIList()),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query174Response deserialize(Value map) {
+Query174Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i: (_v0['i'] as IList<dynamic>).map((_v1) => (_v1 as dynamic)).toIList(),

@@ -26,12 +26,12 @@ Stream<GetTaskCountResponse> getTaskCountStream() {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(void args) {
-  return hashmapToBtreemap(hashmap: {});
+ConvexArgs serialize(void args) {
+  return encodeArgs({});
 }
 
 @pragma("vm:prefer-inline")
-GetTaskCountResponse deserialize(Value map) {
+GetTaskCountResponse deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       completed: (_v0['completed'] as double),

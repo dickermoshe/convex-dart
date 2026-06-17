@@ -26,33 +26,31 @@ Stream<Query130Response> query130Stream(Query130Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query130Args args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'i': encodeValue({
-        'steps': encodeValue(
-          args.i.steps
-              .map(
-                (_v0) => encodeValue({
-                  'config': encodeValue({
-                    for (final _v1 in _v0.config.entries)
-                      _v1.key: encodeValue(encodeValue(_v1.value)),
-                  }),
-                  'id': encodeValue(_v0.id),
-                  'name': encodeValue(_v0.name),
-                  if (_v0.next.isDefined)
-                    'next': encodeValue(_v0.next.asDefined().value),
+ConvexArgs serialize(Query130Args args) {
+  return encodeArgs({
+    'i': encodeValue({
+      'steps': encodeValue(
+        args.i.steps
+            .map(
+              (_v0) => encodeValue({
+                'config': encodeValue({
+                  for (final _v1 in _v0.config.entries)
+                    _v1.key: encodeValue(encodeValue(_v1.value)),
                 }),
-              )
-              .toIList(),
-        ),
-      }),
-    },
-  );
+                'id': encodeValue(_v0.id),
+                'name': encodeValue(_v0.name),
+                if (_v0.next.isDefined)
+                  'next': encodeValue(_v0.next.asDefined().value),
+              }),
+            )
+            .toIList(),
+      ),
+    }),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query130Response deserialize(Value map) {
+Query130Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i: (_v0['i'] as IMap<String, dynamic>).then(

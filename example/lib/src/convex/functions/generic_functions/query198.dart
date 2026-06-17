@@ -26,19 +26,17 @@ Stream<Query198Response> query198Stream(Query198Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query198Args args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'i': encodeValue({
-        'name': encodeValue(args.i.name),
-        'value': encodeValue(args.i.value),
-      }),
-    },
-  );
+ConvexArgs serialize(Query198Args args) {
+  return encodeArgs({
+    'i': encodeValue({
+      'name': encodeValue(args.i.name),
+      'value': encodeValue(args.i.value),
+    }),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query198Response deserialize(Value map) {
+Query198Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i: (_v0['i'] as IMap<String, dynamic>).then(

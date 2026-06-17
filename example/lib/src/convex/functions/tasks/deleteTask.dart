@@ -17,12 +17,12 @@ Future<DeleteTaskResponse> deleteTask(DeleteTaskArgs args) async {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(DeleteTaskArgs args) {
-  return hashmapToBtreemap(hashmap: {'id': encodeValue(args.id)});
+ConvexArgs serialize(DeleteTaskArgs args) {
+  return encodeArgs({'id': encodeValue(args.id)});
 }
 
 @pragma("vm:prefer-inline")
-DeleteTaskResponse deserialize(Value map) {
+DeleteTaskResponse deserialize(ConvexValue map) {
   return (body: null);
 }
 

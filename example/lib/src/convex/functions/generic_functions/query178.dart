@@ -26,21 +26,19 @@ Stream<Query178Response> query178Stream(Query178Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query178Args args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'i': encodeValue(
-        args.i.split(
-          (_v0) => encodeValue(_v0.map((_v1) => encodeValue(_v1)).toIList()),
-          (_v2) => encodeValue(_v2.map((_v3) => encodeValue(_v3)).toIList()),
-        ),
+ConvexArgs serialize(Query178Args args) {
+  return encodeArgs({
+    'i': encodeValue(
+      args.i.split(
+        (_v0) => encodeValue(_v0.map((_v1) => encodeValue(_v1)).toIList()),
+        (_v2) => encodeValue(_v2.map((_v3) => encodeValue(_v3)).toIList()),
       ),
-    },
-  );
+    ),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query178Response deserialize(Value map) {
+Query178Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i: Union2<IList<String>, IList<double>>(() {

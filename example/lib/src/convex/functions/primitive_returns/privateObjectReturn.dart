@@ -26,12 +26,12 @@ Stream<PrivateObjectReturnResponse> privateObjectReturnStream() {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(void args) {
-  return hashmapToBtreemap(hashmap: {});
+ConvexArgs serialize(void args) {
+  return encodeArgs({});
 }
 
 @pragma("vm:prefer-inline")
-PrivateObjectReturnResponse deserialize(Value map) {
+PrivateObjectReturnResponse deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (i: (_v0['_i'] as String)),
   );

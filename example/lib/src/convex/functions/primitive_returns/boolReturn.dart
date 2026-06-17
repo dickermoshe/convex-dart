@@ -26,12 +26,12 @@ Stream<BoolReturnResponse> boolReturnStream() {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(void args) {
-  return hashmapToBtreemap(hashmap: {});
+ConvexArgs serialize(void args) {
+  return encodeArgs({});
 }
 
 @pragma("vm:prefer-inline")
-BoolReturnResponse deserialize(Value map) {
+BoolReturnResponse deserialize(ConvexValue map) {
   return (body: (decodeValue(map) as bool));
 }
 

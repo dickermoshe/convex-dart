@@ -26,77 +26,72 @@ Stream<Query131Response> query131Stream(Query131Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query131Args args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'i': encodeValue({
-        'steps': encodeValue(
-          args.i.steps
-              .map(
-                (_v0) => encodeValue({
-                  if (_v0.error.isDefined)
-                    'error': encodeValue({
-                      'handler': encodeValue(
-                        _v0.error.asDefined().value.handler,
+ConvexArgs serialize(Query131Args args) {
+  return encodeArgs({
+    'i': encodeValue({
+      'steps': encodeValue(
+        args.i.steps
+            .map(
+              (_v0) => encodeValue({
+                if (_v0.error.isDefined)
+                  'error': encodeValue({
+                    'handler': encodeValue(_v0.error.asDefined().value.handler),
+                    'retry': encodeValue({
+                      'count': encodeValue(
+                        _v0.error.asDefined().value.retry.count,
                       ),
-                      'retry': encodeValue({
-                        'count': encodeValue(
-                          _v0.error.asDefined().value.retry.count,
-                        ),
-                        'delay': encodeValue(
-                          _v0.error.asDefined().value.retry.delay,
-                        ),
-                      }),
+                      'delay': encodeValue(
+                        _v0.error.asDefined().value.retry.delay,
+                      ),
                     }),
-                  'type': encodeValue(_v0.type.value),
-                }),
-              )
-              .toIList(),
-        ),
-        'triggers': encodeValue(
-          args.i.triggers
-              .map(
-                (_v1) => encodeValue(
-                  _v1.split(
-                    (_v2) => encodeValue({
-                      'cron': encodeValue(_v2.cron),
-                      'type': encodeValue(_v2.type),
-                    }),
-                    (_v3) => encodeValue({
-                      'type': encodeValue(_v3.type),
-                      'url': encodeValue(_v3.url),
-                    }),
-                    (_v4) => encodeValue({
-                      'eventType': encodeValue(_v4.eventType),
-                      'type': encodeValue(_v4.type),
-                    }),
-                  ),
-                ),
-              )
-              .toIList(),
-        ),
-        'variables': encodeValue({
-          for (final _v5 in args.i.variables.entries)
-            _v5.key: encodeValue(
-              encodeValue(
-                _v5.value.split(
-                  (_v6) => encodeValue(_v6),
-                  (_v7) => encodeValue(_v7),
-                  (_v8) => encodeValue(_v8),
-                  (_v9) => encodeValue(
-                    _v9.map((_v10) => encodeValue(_v10)).toIList(),
-                  ),
+                  }),
+                'type': encodeValue(_v0.type.value),
+              }),
+            )
+            .toIList(),
+      ),
+      'triggers': encodeValue(
+        args.i.triggers
+            .map(
+              (_v1) => encodeValue(
+                _v1.split(
+                  (_v2) => encodeValue({
+                    'cron': encodeValue(_v2.cron),
+                    'type': encodeValue(_v2.type),
+                  }),
+                  (_v3) => encodeValue({
+                    'type': encodeValue(_v3.type),
+                    'url': encodeValue(_v3.url),
+                  }),
+                  (_v4) => encodeValue({
+                    'eventType': encodeValue(_v4.eventType),
+                    'type': encodeValue(_v4.type),
+                  }),
                 ),
               ),
+            )
+            .toIList(),
+      ),
+      'variables': encodeValue({
+        for (final _v5 in args.i.variables.entries)
+          _v5.key: encodeValue(
+            encodeValue(
+              _v5.value.split(
+                (_v6) => encodeValue(_v6),
+                (_v7) => encodeValue(_v7),
+                (_v8) => encodeValue(_v8),
+                (_v9) =>
+                    encodeValue(_v9.map((_v10) => encodeValue(_v10)).toIList()),
+              ),
             ),
-        }),
+          ),
       }),
-    },
-  );
+    }),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query131Response deserialize(Value map) {
+Query131Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i: (_v0['i'] as IMap<String, dynamic>).then(

@@ -26,48 +26,45 @@ Stream<Query123Response> query123Stream(Query123Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query123Args args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'i': encodeValue(
-        args.i.split(
-          (_v0) => encodeValue({
-            'content': encodeValue(_v0.content),
-            if (_v0.formatting.isDefined)
-              'formatting': encodeValue({
-                'bold': encodeValue(_v0.formatting.asDefined().value.bold),
-                'color': encodeValue(
-                  _v0.formatting.asDefined().value.color.value,
-                ),
-                'italic': encodeValue(_v0.formatting.asDefined().value.italic),
-              }),
-            'type': encodeValue(_v0.type),
-          }),
-          (_v1) => encodeValue({
-            if (_v1.alt.isDefined)
-              'alt': encodeValue(_v1.alt.asDefined().value),
-            'dimensions': encodeValue({
-              'height': encodeValue(_v1.dimensions.height),
-              'width': encodeValue(_v1.dimensions.width),
+ConvexArgs serialize(Query123Args args) {
+  return encodeArgs({
+    'i': encodeValue(
+      args.i.split(
+        (_v0) => encodeValue({
+          'content': encodeValue(_v0.content),
+          if (_v0.formatting.isDefined)
+            'formatting': encodeValue({
+              'bold': encodeValue(_v0.formatting.asDefined().value.bold),
+              'color': encodeValue(
+                _v0.formatting.asDefined().value.color.value,
+              ),
+              'italic': encodeValue(_v0.formatting.asDefined().value.italic),
             }),
-            'type': encodeValue(_v1.type),
-            'url': encodeValue(_v1.url),
+          'type': encodeValue(_v0.type),
+        }),
+        (_v1) => encodeValue({
+          if (_v1.alt.isDefined) 'alt': encodeValue(_v1.alt.asDefined().value),
+          'dimensions': encodeValue({
+            'height': encodeValue(_v1.dimensions.height),
+            'width': encodeValue(_v1.dimensions.width),
           }),
-          (_v2) => encodeValue({
-            'items': encodeValue(
-              _v2.items.map((_v3) => encodeValue(_v3)).toIList(),
-            ),
-            'ordered': encodeValue(_v2.ordered),
-            'type': encodeValue(_v2.type),
-          }),
-        ),
+          'type': encodeValue(_v1.type),
+          'url': encodeValue(_v1.url),
+        }),
+        (_v2) => encodeValue({
+          'items': encodeValue(
+            _v2.items.map((_v3) => encodeValue(_v3)).toIList(),
+          ),
+          'ordered': encodeValue(_v2.ordered),
+          'type': encodeValue(_v2.type),
+        }),
       ),
-    },
-  );
+    ),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query123Response deserialize(Value map) {
+Query123Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i:

@@ -26,75 +26,71 @@ Stream<Query124Response> query124Stream(Query124Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query124Args args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'i': encodeValue({
-        'api': encodeValue({
-          'endpoints': encodeValue({
-            for (final _v0 in args.i.api.endpoints.entries)
-              _v0.key: encodeValue(
-                encodeValue({
-                  if (_v0.value.auth.isDefined)
-                    'auth': encodeValue(_v0.value.auth.asDefined().value),
-                  'method': encodeValue(_v0.value.method.value),
-                  'params': encodeValue({
-                    for (final _v1 in _v0.value.params.entries)
-                      _v1.key: encodeValue(
-                        encodeValue(
-                          _v1.value.split(
-                            (_v2) => encodeValue(_v2),
-                            (_v3) => encodeValue(_v3),
-                            (_v4) => encodeValue(_v4),
-                          ),
+ConvexArgs serialize(Query124Args args) {
+  return encodeArgs({
+    'i': encodeValue({
+      'api': encodeValue({
+        'endpoints': encodeValue({
+          for (final _v0 in args.i.api.endpoints.entries)
+            _v0.key: encodeValue(
+              encodeValue({
+                if (_v0.value.auth.isDefined)
+                  'auth': encodeValue(_v0.value.auth.asDefined().value),
+                'method': encodeValue(_v0.value.method.value),
+                'params': encodeValue({
+                  for (final _v1 in _v0.value.params.entries)
+                    _v1.key: encodeValue(
+                      encodeValue(
+                        _v1.value.split(
+                          (_v2) => encodeValue(_v2),
+                          (_v3) => encodeValue(_v3),
+                          (_v4) => encodeValue(_v4),
                         ),
                       ),
-                  }),
-                  'path': encodeValue(_v0.value.path),
-                  'response': encodeValue(_v0.value.response),
+                    ),
                 }),
-              ),
-          }),
-          'rateLimit': encodeValue({
-            'requests': encodeValue(args.i.api.rateLimit.requests),
-            'window': encodeValue(args.i.api.rateLimit.window.value),
-          }),
+                'path': encodeValue(_v0.value.path),
+                'response': encodeValue(_v0.value.response),
+              }),
+            ),
         }),
-        'database': encodeValue({
-          'tables': encodeValue({
-            for (final _v5 in args.i.database.tables.entries)
-              _v5.key: encodeValue(
-                encodeValue({
-                  'indexes': encodeValue(
-                    _v5.value.indexes
-                        .map(
-                          (_v6) => encodeValue({
-                            'fields': encodeValue(
-                              _v6.fields
-                                  .map((_v7) => encodeValue(_v7))
-                                  .toIList(),
-                            ),
-                            'name': encodeValue(_v6.name),
-                            'unique': encodeValue(_v6.unique),
-                          }),
-                        )
-                        .toIList(),
-                  ),
-                  'schema': encodeValue({
-                    for (final _v8 in _v5.value.schema.entries)
-                      _v8.key: encodeValue(encodeValue(_v8.value.value)),
-                  }),
-                }),
-              ),
-          }),
+        'rateLimit': encodeValue({
+          'requests': encodeValue(args.i.api.rateLimit.requests),
+          'window': encodeValue(args.i.api.rateLimit.window.value),
         }),
       }),
-    },
-  );
+      'database': encodeValue({
+        'tables': encodeValue({
+          for (final _v5 in args.i.database.tables.entries)
+            _v5.key: encodeValue(
+              encodeValue({
+                'indexes': encodeValue(
+                  _v5.value.indexes
+                      .map(
+                        (_v6) => encodeValue({
+                          'fields': encodeValue(
+                            _v6.fields.map((_v7) => encodeValue(_v7)).toIList(),
+                          ),
+                          'name': encodeValue(_v6.name),
+                          'unique': encodeValue(_v6.unique),
+                        }),
+                      )
+                      .toIList(),
+                ),
+                'schema': encodeValue({
+                  for (final _v8 in _v5.value.schema.entries)
+                    _v8.key: encodeValue(encodeValue(_v8.value.value)),
+                }),
+              }),
+            ),
+        }),
+      }),
+    }),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query124Response deserialize(Value map) {
+Query124Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i: (_v0['i'] as IMap<String, dynamic>).then(

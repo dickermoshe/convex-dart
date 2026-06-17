@@ -26,14 +26,12 @@ Stream<SearchTasksResponse> searchTasksStream(SearchTasksArgs args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(SearchTasksArgs args) {
-  return hashmapToBtreemap(
-    hashmap: {'searchText': encodeValue(args.searchText)},
-  );
+ConvexArgs serialize(SearchTasksArgs args) {
+  return encodeArgs({'searchText': encodeValue(args.searchText)});
 }
 
 @pragma("vm:prefer-inline")
-SearchTasksResponse deserialize(Value map) {
+SearchTasksResponse deserialize(ConvexValue map) {
   return (
     body: (decodeValue(map) as IList<dynamic>)
         .map(

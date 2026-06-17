@@ -30,12 +30,12 @@ Stream<Query34WithNullResponse> query34WithNullStream(
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query34WithNullArgs args) {
-  return hashmapToBtreemap(hashmap: {'i': encodeValue(args.i?.value)});
+ConvexArgs serialize(Query34WithNullArgs args) {
+  return encodeArgs({'i': encodeValue(args.i?.value)});
 }
 
 @pragma("vm:prefer-inline")
-Query34WithNullResponse deserialize(Value map) {
+Query34WithNullResponse deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (i: _v0['i'] == null ? null : $blue$red.fromValue(_v0['i'])),
   );

@@ -623,14 +623,14 @@ Stream<$returnsTypeName> ${functionName}Stream(${argsTypeName != null ? "$argsTy
 
     context.functionBuffer.writeln("""
 @pragma("vm:prefer-inline")
-BTreeMapStringValue $serializeMethodName(${argsTypeName ?? "void"} args) {
-  return hashmapToBtreemap(hashmap: $serializeCode);
+ConvexArgs $serializeMethodName(${argsTypeName ?? "void"} args) {
+  return encodeArgs($serializeCode);
 }
 
 """);
     context.functionBuffer.writeln("""
 @pragma("vm:prefer-inline")
-$returnsTypeName $deserializeMethodName(Value map) {
+$returnsTypeName $deserializeMethodName(ConvexValue map) {
   return $deserializeCode;
 }
 """);

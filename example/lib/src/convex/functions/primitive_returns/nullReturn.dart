@@ -26,12 +26,12 @@ Stream<NullReturnResponse> nullReturnStream() {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(void args) {
-  return hashmapToBtreemap(hashmap: {});
+ConvexArgs serialize(void args) {
+  return encodeArgs({});
 }
 
 @pragma("vm:prefer-inline")
-NullReturnResponse deserialize(Value map) {
+NullReturnResponse deserialize(ConvexValue map) {
   return (body: null);
 }
 

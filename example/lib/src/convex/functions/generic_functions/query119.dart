@@ -26,33 +26,31 @@ Stream<Query119Response> query119Stream(Query119Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query119Args args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'i': encodeValue({
-        'data': encodeValue(
-          args.i.data.split(
-            (_v0) => encodeValue({
-              'content': encodeValue(_v0.content),
-              'type': encodeValue(_v0.type),
-            }),
-            (_v1) => encodeValue({
-              'content': encodeValue(_v1.content),
-              'type': encodeValue(_v1.type),
-            }),
-            (_v2) => encodeValue({
-              'content': encodeValue(_v2.content),
-              'type': encodeValue(_v2.type),
-            }),
-          ),
+ConvexArgs serialize(Query119Args args) {
+  return encodeArgs({
+    'i': encodeValue({
+      'data': encodeValue(
+        args.i.data.split(
+          (_v0) => encodeValue({
+            'content': encodeValue(_v0.content),
+            'type': encodeValue(_v0.type),
+          }),
+          (_v1) => encodeValue({
+            'content': encodeValue(_v1.content),
+            'type': encodeValue(_v1.type),
+          }),
+          (_v2) => encodeValue({
+            'content': encodeValue(_v2.content),
+            'type': encodeValue(_v2.type),
+          }),
         ),
-      }),
-    },
-  );
+      ),
+    }),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query119Response deserialize(Value map) {
+Query119Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i: (_v0['i'] as IMap<String, dynamic>).then(

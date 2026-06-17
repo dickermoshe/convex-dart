@@ -26,6 +26,11 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 .eslintcache
 .cache
 *.tsbuildinfo
+.webdrivers/
+chromedriver.*.log
+convex-dev.*.log
+web-*-drive.log
+windows-*.log
 
 # IntelliJ based IDEs
 .idea

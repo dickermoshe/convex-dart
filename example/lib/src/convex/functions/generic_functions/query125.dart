@@ -26,87 +26,85 @@ Stream<Query125Response> query125Stream(Query125Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query125Args args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'i': encodeValue({
-        'workflow': encodeValue({
-          'steps': encodeValue(
-            args.i.workflow.steps
-                .map(
-                  (_v0) => encodeValue({
-                    'config': encodeValue({
-                      for (final _v1 in _v0.config.entries)
-                        _v1.key: encodeValue(encodeValue(_v1.value)),
-                    }),
-                    if (_v0.error.isDefined)
-                      'error': encodeValue({
-                        'handler': encodeValue(
-                          _v0.error.asDefined().value.handler,
-                        ),
-                        'retry': encodeValue({
-                          'count': encodeValue(
-                            _v0.error.asDefined().value.retry.count,
-                          ),
-                          'delay': encodeValue(
-                            _v0.error.asDefined().value.retry.delay,
-                          ),
-                        }),
-                      }),
-                    'id': encodeValue(_v0.id),
-                    'name': encodeValue(_v0.name),
-                    if (_v0.next.isDefined)
-                      'next': encodeValue(_v0.next.asDefined().value),
-                    'type': encodeValue(_v0.type.value),
+ConvexArgs serialize(Query125Args args) {
+  return encodeArgs({
+    'i': encodeValue({
+      'workflow': encodeValue({
+        'steps': encodeValue(
+          args.i.workflow.steps
+              .map(
+                (_v0) => encodeValue({
+                  'config': encodeValue({
+                    for (final _v1 in _v0.config.entries)
+                      _v1.key: encodeValue(encodeValue(_v1.value)),
                   }),
-                )
-                .toIList(),
-          ),
-          'triggers': encodeValue(
-            args.i.workflow.triggers
-                .map(
-                  (_v2) => encodeValue(
-                    _v2.split(
-                      (_v3) => encodeValue({
-                        'cron': encodeValue(_v3.cron),
-                        'type': encodeValue(_v3.type),
+                  if (_v0.error.isDefined)
+                    'error': encodeValue({
+                      'handler': encodeValue(
+                        _v0.error.asDefined().value.handler,
+                      ),
+                      'retry': encodeValue({
+                        'count': encodeValue(
+                          _v0.error.asDefined().value.retry.count,
+                        ),
+                        'delay': encodeValue(
+                          _v0.error.asDefined().value.retry.delay,
+                        ),
                       }),
-                      (_v4) => encodeValue({
-                        'type': encodeValue(_v4.type),
-                        'url': encodeValue(_v4.url),
-                      }),
-                      (_v5) => encodeValue({
-                        'eventType': encodeValue(_v5.eventType),
-                        'type': encodeValue(_v5.type),
-                      }),
-                    ),
+                    }),
+                  'id': encodeValue(_v0.id),
+                  'name': encodeValue(_v0.name),
+                  if (_v0.next.isDefined)
+                    'next': encodeValue(_v0.next.asDefined().value),
+                  'type': encodeValue(_v0.type.value),
+                }),
+              )
+              .toIList(),
+        ),
+        'triggers': encodeValue(
+          args.i.workflow.triggers
+              .map(
+                (_v2) => encodeValue(
+                  _v2.split(
+                    (_v3) => encodeValue({
+                      'cron': encodeValue(_v3.cron),
+                      'type': encodeValue(_v3.type),
+                    }),
+                    (_v4) => encodeValue({
+                      'type': encodeValue(_v4.type),
+                      'url': encodeValue(_v4.url),
+                    }),
+                    (_v5) => encodeValue({
+                      'eventType': encodeValue(_v5.eventType),
+                      'type': encodeValue(_v5.type),
+                    }),
                   ),
-                )
-                .toIList(),
-          ),
-          'variables': encodeValue({
-            for (final _v6 in args.i.workflow.variables.entries)
-              _v6.key: encodeValue(
-                encodeValue(
-                  _v6.value.split(
-                    (_v7) => encodeValue(_v7),
-                    (_v8) => encodeValue(_v8),
-                    (_v9) => encodeValue(_v9),
-                    (_v10) => encodeValue(
-                      _v10.map((_v11) => encodeValue(_v11)).toIList(),
-                    ),
+                ),
+              )
+              .toIList(),
+        ),
+        'variables': encodeValue({
+          for (final _v6 in args.i.workflow.variables.entries)
+            _v6.key: encodeValue(
+              encodeValue(
+                _v6.value.split(
+                  (_v7) => encodeValue(_v7),
+                  (_v8) => encodeValue(_v8),
+                  (_v9) => encodeValue(_v9),
+                  (_v10) => encodeValue(
+                    _v10.map((_v11) => encodeValue(_v11)).toIList(),
                   ),
                 ),
               ),
-          }),
+            ),
         }),
       }),
-    },
-  );
+    }),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query125Response deserialize(Value map) {
+Query125Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i: (_v0['i'] as IMap<String, dynamic>).then(

@@ -26,18 +26,16 @@ Stream<Query163Response> query163Stream(Query163Args args) {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(Query163Args args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'i': encodeValue(
-        args.i.split((_v0) => encodeValue(_v0), (_v1) => encodeValue(_v1)),
-      ),
-    },
-  );
+ConvexArgs serialize(Query163Args args) {
+  return encodeArgs({
+    'i': encodeValue(
+      args.i.split((_v0) => encodeValue(_v0), (_v1) => encodeValue(_v1)),
+    ),
+  });
 }
 
 @pragma("vm:prefer-inline")
-Query163Response deserialize(Value map) {
+Query163Response deserialize(ConvexValue map) {
   return (decodeValue(map) as IMap<String, dynamic>).then(
     (_v0) => (
       i: Union2<AId, BId>(() {

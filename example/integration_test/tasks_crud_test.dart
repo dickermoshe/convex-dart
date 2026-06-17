@@ -5,7 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:api/src/convex/client.dart';
 import 'package:convex_dart/convex_dart.dart';
 import 'dart:async';
-import 'package:integration_test/integration_test.dart';
 
 final deepEq = DeepCollectionEquality.unordered();
 

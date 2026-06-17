@@ -17,19 +17,17 @@ Future<UpdateTaskResponse> updateTask(UpdateTaskArgs args) async {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(UpdateTaskArgs args) {
-  return hashmapToBtreemap(
-    hashmap: {
-      'id': encodeValue(args.id),
-      if (args.isCompleted.isDefined)
-        'isCompleted': encodeValue(args.isCompleted.asDefined().value),
-      if (args.text.isDefined) 'text': encodeValue(args.text.asDefined().value),
-    },
-  );
+ConvexArgs serialize(UpdateTaskArgs args) {
+  return encodeArgs({
+    'id': encodeValue(args.id),
+    if (args.isCompleted.isDefined)
+      'isCompleted': encodeValue(args.isCompleted.asDefined().value),
+    if (args.text.isDefined) 'text': encodeValue(args.text.asDefined().value),
+  });
 }
 
 @pragma("vm:prefer-inline")
-UpdateTaskResponse deserialize(Value map) {
+UpdateTaskResponse deserialize(ConvexValue map) {
   return (body: null);
 }
 

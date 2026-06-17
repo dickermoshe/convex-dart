@@ -26,12 +26,12 @@ Stream<UnionReturnResponse> unionReturnStream() {
 }
 
 @pragma("vm:prefer-inline")
-BTreeMapStringValue serialize(void args) {
-  return hashmapToBtreemap(hashmap: {});
+ConvexArgs serialize(void args) {
+  return encodeArgs({});
 }
 
 @pragma("vm:prefer-inline")
-UnionReturnResponse deserialize(Value map) {
+UnionReturnResponse deserialize(ConvexValue map) {
   return (
     body: Union2<String, double>(() {
       try {
