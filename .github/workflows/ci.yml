@@ -78,14 +78,19 @@ jobs:
         run: flutter analyze --no-fatal-infos --no-fatal-warnings
         working-directory: example
 
-      - name: Run example integration tests
-        if: runner.os != 'Linux'
-        run: flutter test integration_test/test_all.dart
+      - name: Run example integration tests on macOS
+        if: runner.os == 'macOS'
+        run: flutter test integration_test/test_all.dart -d macos
+        working-directory: example
+
+      - name: Run example integration tests on Windows
+        if: runner.os == 'Windows'
+        run: flutter test integration_test/test_all.dart -d windows
         working-directory: example
 
       - name: Run example integration tests on Linux
         if: runner.os == 'Linux'
-        run: xvfb-run -a flutter test integration_test/test_all.dart
+        run: xvfb-run -a flutter test integration_test/test_all.dart -d linux
         working-directory: example
 
   mobile-test:
