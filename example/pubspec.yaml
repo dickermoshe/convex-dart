@@ -1,4 +1,5 @@
 name: api
+version: 1.0.0+1
 
 environment:
   sdk: ^3.9.0
@@ -22,3 +23,7 @@ dev_dependencies:
     sdk: flutter
 
 resolution: workspace
+
+flutter:
+  config:
+    enable-swift-package-manager: false

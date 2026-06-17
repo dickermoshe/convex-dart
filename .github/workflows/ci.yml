@@ -17,6 +17,7 @@ jobs:
     timeout-minutes: 45
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
         os:
           - ubuntu-latest
@@ -89,10 +90,12 @@ jobs:
 
   mobile-test:
     name: Flutter integration tests (${{ matrix.platform }})
+    needs: desktop-test
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
         include:
           - platform: Android
