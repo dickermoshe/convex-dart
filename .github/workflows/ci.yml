@@ -70,7 +70,7 @@ jobs:
         working-directory: example
 
       - name: Generate Dart Convex client
-        run: dart run convex_dart_cli generate --public-serialize --prod
+        run: dart run convex_dart_cli generate --public-serialize --deployment prod
         working-directory: example
 
       - name: Analyze example
